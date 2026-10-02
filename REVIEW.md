@@ -136,3 +136,55 @@
 ### Decisions and assumptions
 - Added a visual drawer slide-in upon adding items from both the catalogue card and the detail view to provide immediate confirmation without intrusive modal dialogs.
 - Enforced hard stock limits directly in the Zustand store as well as the UI buttons to prevent users from placing unavailable inventory in the cart.
+
+## Milestone 4: Checkout, Orders & Email Confirmation
+
+### What was implemented
+- **Zod Order Validation (`src/lib/validators.ts`)**:
+  - Validated order items (`uuid`, `quantity` integer 1..10), shipping address (Nigerian phone format, address, city, state in `SHOP.nigerianStates`, optional notes max 500 chars).
+  - Enforced dynamic Pay on Delivery rule via `superRefine`: if `paymentMethod === 'pay_on_delivery'`, `shipping.state` must pass `isPayOnDeliverySupported()`.
+  - Defined client checkout schema `checkoutFormSchema` and types `CheckoutFormData`, `CreateOrderInput`.
+- **Atomic Order Transaction Service (`src/server/orders/index.ts`)**:
+  - Implemented `createOrder()` wrapped in a single ACID `db.transaction()` on `@neondatabase/serverless` WebSocket Pool.
+  - Generates bespoke order numbers (e.g. `MT-7K2Q9X`) via cryptographically secure random bytes.
+  - Re-reads prices from database (never trusting client-submitted prices or totals).
+  - Deduplicates items and decrements inventory atomically with conditional SQL check (`gte(products.stock, it.quantity)`), rolling back and throwing `OrderError('OUT_OF_STOCK')` if insufficient stock.
+  - Inserts into `orders` and creates immutable line snapshots in `order_items`.
+  - Implemented `cancelOrder(orderId)`: transaction that restores inventory and sets status to `cancelled`.
+  - Implemented `getOrder(orderNumber, userId, isAdmin)` with strict multi-tenant authorization guards.
+  - Implemented `getUserOrders(userId)` returning user orders with line items.
+- **Mailgun Email Integration & Branded Templates (`src/server/email/`)**:
+  - `src/server/email/mailgun.ts`: HTTP Basic auth Mailgun client using native `fetch`.
+  - `src/server/email/templates.ts`: HTML + plain-text fallback templates with escaped user inputs, dark luxury branding, order summary table, shipping details, and direct bank wire instructions (when applicable).
+  - Optional business owner alert when `OWNER_NOTIFY_EMAIL` is set.
+  - Protected by non-blocking error handling: failed email delivery logs an error and leaves `emailSentAt` null without failing the customer order transaction.
+- **API Endpoints**:
+  - `POST /api/orders`: Authenticated order creation with `Origin` CSRF validation, session-derived email (never request body), Zod validation, order transaction, non-blocking email dispatch, and HTTP 201 response.
+  - `GET /api/orders`: Authenticated user orders query.
+  - `GET /api/orders/[orderNumber]`: Authenticated order lookup with 404 security checks for unauthorized viewers.
+- **Interactive Checkout Interface (`src/app/checkout/`)**:
+  - `CheckoutForm.tsx`: React Hook Form with Zod resolver, Google prefilled contact information, read-only session email with security lock, state select dropdown, dynamic Pay on Delivery availability pill and fallback to Bank Transfer, order summary with live item previews, and submit state locking.
+  - Server Component `page.tsx` with authentication guard redirecting unauthenticated users to `/login?next=/checkout`.
+- **Order Confirmation Receipt (`src/app/order-confirmation/[orderNumber]/`)**:
+  - Server-rendered luxury receipt verifying order ownership.
+  - Order reference, placement date, status pill, payment method breakdown.
+  - Prominent wire transfer coordinates card with account number and reference when bank transfer is chosen.
+  - Purchased timepieces with snapshots, quantity, unit price, subtotal, insured shipping fee, and total.
+  - Courier dispatch destination card and direct WhatsApp concierge assistance link.
+- **Client Orders Hub (`src/app/orders/`)**:
+  - Replaced placeholder with full responsive orders dashboard.
+  - Desktop table and mobile card views showcasing order number, date, item thumbnails, payment method, total, status badge, and receipt links.
+  - Curated empty state with direct CTA to the horological collection.
+- **Design System Components (`src/components/ui/StatusBadge.tsx`)**:
+  - Canonical badge mapping for `pending` (warning), `confirmed` (gold), `shipped` (ink), `delivered` (success), and `cancelled` (danger).
+
+### Challenges
+- **`AuthError` property alignment**: `AuthError` in `src/server/auth/guards.ts` defined `statusCode` rather than `status`. Fixed across all API route handlers to return the appropriate 401/403 HTTP response.
+- **Testing against `server-only` constraints**: Directly importing `src/server/orders` into a standalone Node test runner triggered Next.js's `'server-only'` guard. Solved by testing the atomic transaction logic directly with the Neon WebSocket Pool driver.
+
+### Improvements
+- In M5 (Admin), implement `/admin` dashboard with aggregated metrics (total orders, pending count, non-cancelled revenue), paginated/filterable orders table, order detail view, and status updater (`PATCH /api/admin/orders/[id]`) that invokes `cancelOrder()` to automatically restock items when cancelled.
+
+### Decisions and assumptions
+- For Pay on Delivery, if the user changes their delivery state to an unsupported region, the form dynamically switches the payment selection to Direct Bank Transfer with clear feedback explaining the constraint.
+- Order confirmation page is accessible to both the order owner and administrators, returning a strict 404 to any other user.
