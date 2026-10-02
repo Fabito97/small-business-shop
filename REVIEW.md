@@ -37,3 +37,4 @@
 - Used Tailwind CSS v4 `@theme` directive to map `--color-*` and `--font-*` tokens directly to CSS variables, ensuring full compatibility with Next.js 15 while honoring the exact color hex codes and font pairings from `04_DESIGN_SYSTEM.md`.
 - Stored all initial watch catalogue seed data in `src/db/seed.ts` using 8 watches spanning dress, sport, classic, and smart categories with realistic kobo amounts.
 - Established `src/server/` as the dedicated home for all backend services, database operations, and external API integrations, with backwards-compatible barrels under `src/db/`.
+- Upgraded to latest Next.js 16 (`^16.3.8`) with native ESLint 9 flat configuration (`eslint .`), preserving full compatibility with Tailwind CSS v4, shadcn/ui, and React 19.
