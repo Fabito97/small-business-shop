@@ -71,3 +71,34 @@
 - Generated real, bespoke luxury watch imagery featuring the brand name for hero and craftsmanship sections rather than generic placeholders.
 - Used direct SVG Google branding for the OAuth button to ensure crisp rendering across high-DPI screens.
 
+## Milestone 2: Catalogue & Marketplace
+
+### What was implemented
+- **Catalogue API (`GET /api/products`)**: Filterable, searchable, and paginated endpoint querying active products in Neon using Drizzle ORM. Supports filtering by `category`, `q` (`ilike` on name, brand, description), `minPrice` / `maxPrice` (in kobo), `inStock` boolean, and sorting by `newest`, `price_asc`, or `price_desc`.
+- **Client Data Fetching (`src/hooks/useProducts.ts`)**: TanStack React Query hook with automatic 60-second cache invalidation and serialized query keys.
+- **Client Providers (`src/components/providers.tsx`)**: Configured global `QueryClientProvider` with dark luxury `Toaster` from `sonner`.
+- **Marketplace Interface (`src/app/shop/page.tsx`)**:
+  - Refined filter sidebar with category pills, price spectrum presets, and in-stock toggle.
+  - Debounced real-time search and sort dropdown.
+  - Responsive grid layout (1 col mobile, 2 col tablet, 3 col desktop) with `ProductCard`.
+  - Empty state with reset CTA and shimmer loading states with `ProductGridSkeleton`.
+  - URL parameter synchronization for direct linking (e.g. `/shop?category=sport`).
+- **Product Card (`src/components/shop/ProductCard.tsx`)**: Displays product image with hover zoom, category badge, stock badges (`In Stock`, `Only X Left`, `Out of Stock`), movement pill, and formatted Naira pricing.
+- **Product Detail Page (`src/app/shop/[slug]/page.tsx`)**:
+  - Dynamic SEO metadata generation via `generateMetadata`.
+  - Server Component querying Neon with 404 (`notFound()`) handling for inactive/missing slugs.
+  - Interactive client gallery with thumbnail switcher (`ProductDetailClient.tsx`).
+  - Full horology specification matrix (movement, case diameter, strap, water resistance).
+  - Quantity selector, Add to Bag action, and direct WhatsApp Concierge inquiry link.
+  - Related timepieces section showcasing 4 matching calibers from the same category.
+
+### Challenges
+- **Eliminating Cascading Renders**: ESLint flagged a potential cascading render warning when syncing URL search parameters to state within `useEffect`. Solved by directly deriving the active category from `searchParams` and passing an explicit filter updater that updates URL and query state synchronously.
+
+### Improvements
+- In M3 (Cart), implement the Zustand persisted cart store (`src/store/cart.ts`), cart drawer component, and `/cart` page with stock validation.
+
+### Decisions and assumptions
+- Implemented `ProductDetailClient` as a focused client component for image gallery selection and quantity controls while keeping the outer `shop/[slug]/page.tsx` as a pure Server Component for maximum SEO and performance.
+
+
