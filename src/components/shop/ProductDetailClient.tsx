@@ -16,6 +16,7 @@ import { BRAND } from '@/config/brand';
 import { SHOP } from '@/config/shop';
 import { formatNaira } from '@/lib/money';
 import { toast } from 'sonner';
+import { useCartStore } from '@/store/cart';
 
 interface ProductDetailClientProps {
   product: Product;
@@ -31,6 +32,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const isLowStock = product.stock > 0 && product.stock <= 3;
   const maxAvailable = Math.min(product.stock, 10);
 
+  const addItem = useCartStore((state) => state.add);
+
   const handleDecreaseQty = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
   };
@@ -41,8 +44,19 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;
+    addItem(
+      {
+        productId: product.id,
+        slug: product.slug,
+        name: product.name,
+        image: product.imageUrl,
+        priceKobo: product.priceKobo,
+        stock: product.stock,
+      },
+      quantity
+    );
     toast.success(`Added ${quantity} × ${product.name} to your collection`, {
-      description: 'Proceed to checkout or review your selections in the bag.',
+      description: 'Your acquisition bag has been updated.',
     });
   };
 

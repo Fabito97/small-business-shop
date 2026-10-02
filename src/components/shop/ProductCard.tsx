@@ -1,8 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import type { Product } from '@/server/db/schema';
 import { formatNaira } from '@/lib/money';
+import { useCartStore } from '@/store/cart';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +15,27 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const isOutOfStock = product.stock <= 0;
   const isLowStock = product.stock > 0 && product.stock <= 3;
+  const addItem = useCartStore((state) => state.add);
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isOutOfStock) return;
+
+    addItem(
+      {
+        productId: product.id,
+        slug: product.slug,
+        name: product.name,
+        image: product.imageUrl,
+        priceKobo: product.priceKobo,
+        stock: product.stock,
+      },
+      1
+    );
+
+    toast.success(`Added ${product.name} to your collection`);
+  };
 
   return (
     <div
@@ -80,7 +105,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Price & Action */}
-        <div className="pt-4 border-t border-[var(--sand)]/10 flex items-center justify-between">
+        <div className="pt-4 border-t border-[var(--sand)]/10 flex items-center justify-between gap-3">
           <div>
             <span className="text-[10px] uppercase tracking-wider text-[var(--muted)] block">
               Acquisition
@@ -90,13 +115,25 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           </div>
 
-          <Link
-            href={`/shop/${product.slug}`}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[var(--ink)] hover:bg-[var(--gold)] text-[var(--sand)] hover:text-[var(--ink)] text-xs uppercase tracking-wider font-semibold border border-[var(--gold)]/30 transition-all duration-200"
-          >
-            <span>Inspect</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleQuickAdd}
+              disabled={isOutOfStock}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[var(--ink)] hover:bg-[var(--gold)] text-[var(--sand)] hover:text-[var(--ink)] text-xs uppercase tracking-wider font-semibold border border-[var(--gold)]/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+              aria-label={`Add ${product.name} to cart`}
+            >
+              <ShoppingBag className="w-3.5 h-3.5" />
+              <span>{isOutOfStock ? 'Sold' : 'Add'}</span>
+            </button>
+
+            <Link
+              href={`/shop/${product.slug}`}
+              className="px-2.5 py-2 rounded-lg border border-[var(--sand)]/20 hover:border-[var(--gold)]/40 text-[var(--muted)] hover:text-[var(--sand)] text-xs transition-colors"
+              title="Inspect specifications"
+            >
+              Details
+            </Link>
+          </div>
         </div>
       </div>
     </div>

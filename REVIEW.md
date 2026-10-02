@@ -102,3 +102,37 @@
 - Implemented `ProductDetailClient` as a focused client component for image gallery selection and quantity controls while keeping the outer `shop/[slug]/page.tsx` as a pure Server Component for maximum SEO and performance.
 
 
+
+## Milestone 3: Shopping Cart & Drawer
+
+### What was implemented
+- **Persisted Zustand Cart Store (`src/store/cart.ts`)**:
+  - Configured Zustand store with `persist` middleware targeting `localStorage` (`meridian-cart`).
+  - Stock-guarded state mutations: `add()` and `setQty()` strictly clamp quantities to `product.stock`.
+  - Derived selectors: `selectCartCount`, `selectCartSubtotal`, `selectCartShippingFee`, `selectCartTotal`, and `selectFreeShippingProgress`.
+  - Configured reactive nationwide shipping calculations: free shipping above `SHOP.freeShippingThresholdKobo` (₦1,000,000), otherwise standard fee `SHOP.shippingFeeKobo` (₦5,000).
+- **Hydration-Safe Client Mounting (`src/hooks/useIsMounted.ts`)**:
+  - Built a zero-overhead `useIsMounted` hook using React's `useSyncExternalStore(emptySubscribe, () => true, () => false)` to prevent hydration mismatches and comply with React 19/ESLint rules.
+- **Cart Slide-Over Drawer (`src/components/cart/CartDrawer.tsx`)**:
+  - Animated right-side slide-over drawer with backdrop blur.
+  - Dynamic free shipping progress bar showing kobo remaining until complimentary courier dispatch.
+  - Item list with product image, caliber name, category, unit price, quantity stepper with disabled controls at stock limit ("Max stock" indicator), and instant item removal.
+  - Subtotal and estimated shipping breakdown, with a primary "Proceed to Checkout" action button.
+- **Cart Icon Badge (`src/components/cart/CartIconBadge.tsx`)**:
+  - Live animated item count badge embedded in the global `Header`.
+- **Full Cart View (`src/app/cart/page.tsx`)**:
+  - Dedicated `/cart` route with responsive layout (compact card view on mobile, structured horological table on desktop).
+  - Quantity controls, live price updates, order summary sidebar, and curated empty bag state with direct CTA back to the marketplace.
+- **Interactive Storefront Integration**:
+  - Connected `ProductCard` "Add to Bag" quick action button.
+  - Connected `ProductDetailClient` quantity selector and "Add to Bag" button with automated drawer opening.
+
+### Challenges
+- **React 19 / ESLint `react-hooks/set-state-in-effect`**: Setting `mounted = true` in a `useEffect` triggers an ESLint warning for synchronous cascading renders in React 19. Solved by replacing state-based mount tracking with `useSyncExternalStore`, guaranteeing safe server/client synchronization with zero extra re-renders.
+
+### Improvements
+- In M4 (Checkout & Orders), build the single-transaction order placement (`db.transaction()`), address form with Nigerian state validation, dynamic Pay on Delivery check, Mailgun confirmation email, and order confirmation receipt.
+
+### Decisions and assumptions
+- Added a visual drawer slide-in upon adding items from both the catalogue card and the detail view to provide immediate confirmation without intrusive modal dialogs.
+- Enforced hard stock limits directly in the Zustand store as well as the UI buttons to prevent users from placing unavailable inventory in the cart.
