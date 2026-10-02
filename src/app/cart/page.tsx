@@ -55,7 +55,7 @@ export default function CartPage() {
         <div className="w-16 h-16 rounded-full bg-[var(--charcoal)] border border-[var(--gold)]/20 flex items-center justify-center text-[var(--gold)] mx-auto mb-6">
           <ShoppingBag className="w-8 h-8" />
         </div>
-        <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ivory)] font-light">
+        <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] font-light">
           Your Vault Is Currently Empty
         </h1>
         <p className="text-sm text-[var(--muted)] max-w-md mx-auto mt-3 leading-relaxed">
@@ -77,12 +77,12 @@ export default function CartPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
       {/* Title & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[var(--sand)]/10 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[var(--sand)] pb-6">
         <div>
           <span className="text-xs uppercase tracking-[0.25em] text-[var(--gold)] font-medium">
             Client Selections
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ivory)] font-light mt-1">
+          <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] font-light mt-1">
             Acquisition Bag ({itemCount} {itemCount === 1 ? 'Timepiece' : 'Timepieces'})
           </h1>
         </div>

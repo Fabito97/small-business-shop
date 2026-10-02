@@ -276,3 +276,18 @@
 - [x] No secrets in client bundle; `.env.example` provided; `.env.local` gitignored
 - [x] README with setup + deploy steps + how the owner changes brand/products complete
 - [x] `npm run build` and `npm run lint` compile with zero errors
+
+## Post-M7 Polish: Section Heading Contrast Alignment
+
+### What was implemented
+- **High-Contrast Section Headings on Ivory Theme**:
+  - Audited typography across all customer-facing routes (`/`, `/shop`, `/shop/[slug]`, `/cart`).
+  - Corrected section headings and page titles that previously specified `text-[var(--ivory)]` on the ivory background (`var(--ivory)` / `#FAF7F2`) to `text-[var(--ink)]` (`#0E0E10`).
+  - Updated root layout `<body>` baseline classes to `bg-[var(--ivory)] text-[var(--ink)]`.
+  - Updated secondary button borders, trust badges, and specification headings to ensure strict WCAG AA contrast compliance.
+
+### Challenges
+- Ensuring components with dark containers (e.g. `ProductCard`, `FilterSidebar`, `CartDrawer`, and Atelier banner) preserved their high-contrast ivory text on charcoal backgrounds while only updating headings resting directly on the light ivory page canvas.
+
+### Decisions and assumptions
+- Preserved `text-[var(--ivory)]` on dark elements (`bg-[var(--charcoal)]`, `bg-[var(--ink)]`) for consistent dark-luxury editorial depth while enforcing `text-[var(--ink)]` on page-level backgrounds.

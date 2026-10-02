@@ -40,7 +40,7 @@ export default async function HomePage() {
                 <span>Haute Horlogerie · Victoria Island</span>
               </div>
 
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-light text-[var(--ivory)] tracking-tight leading-[1.08]">
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-light text-[var(--ink)] tracking-tight leading-[1.08]">
                 Crafted to keep time. <br />
                 <span className="italic font-normal text-[var(--gold)]">
                   Chosen to be remembered.
@@ -62,28 +62,28 @@ export default async function HomePage() {
 
                 <a
                   href="#craftsmanship"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-[var(--sand)]/20 hover:border-[var(--gold)]/50 text-[var(--sand)] hover:text-[var(--gold)] px-8 py-4 rounded-lg text-xs uppercase tracking-[0.2em] transition-colors"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-[var(--ink)]/20 hover:border-[var(--gold)] text-[var(--ink)] hover:text-[var(--gold-deep)] px-8 py-4 rounded-lg text-xs uppercase tracking-[0.2em] transition-colors"
                 >
                   <span>Our Atelier</span>
                 </a>
               </div>
 
               {/* Quick Trust badges */}
-              <div className="pt-8 border-t border-[var(--sand)]/10 grid grid-cols-3 gap-4 text-center lg:text-left">
+              <div className="pt-8 border-t border-[var(--sand)] grid grid-cols-3 gap-4 text-center lg:text-left">
                 <div>
-                  <p className="font-serif text-2xl text-[var(--ivory)] font-light">100%</p>
+                  <p className="font-serif text-2xl text-[var(--ink)] font-light">100%</p>
                   <p className="text-[11px] text-[var(--muted)] uppercase tracking-wider mt-0.5">
                     Authentic
                   </p>
                 </div>
                 <div>
-                  <p className="font-serif text-2xl text-[var(--ivory)] font-light">12 Mo</p>
+                  <p className="font-serif text-2xl text-[var(--ink)] font-light">12 Mo</p>
                   <p className="text-[11px] text-[var(--muted)] uppercase tracking-wider mt-0.5">
                     Warranty
                   </p>
                 </div>
                 <div>
-                  <p className="font-serif text-2xl text-[var(--ivory)] font-light">36 States</p>
+                  <p className="font-serif text-2xl text-[var(--ink)] font-light">36 States</p>
                   <p className="text-[11px] text-[var(--muted)] uppercase tracking-wider mt-0.5">
                     Insured Transit
                   </p>
@@ -134,7 +134,7 @@ export default async function HomePage() {
           <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] font-medium">
             Horology Categories
           </span>
-          <h2 className="font-serif text-3xl sm:text-5xl text-[var(--ivory)] font-light tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-5xl text-[var(--ink)] font-light tracking-tight">
             Curated For Every Occasion
           </h2>
           <p className="text-sm text-[var(--muted)]">
@@ -173,18 +173,18 @@ export default async function HomePage() {
       {/* Featured Watches Grid */}
       {featuredWatches.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 border-b border-[var(--sand)]/10 pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 border-b border-[var(--sand)] pb-6">
             <div>
               <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] font-medium">
                 The Showcase
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl text-[var(--ivory)] font-light mt-1">
+              <h2 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] font-light mt-1">
                 Featured Timepieces
               </h2>
             </div>
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--gold)] hover:text-[var(--ivory)] transition-colors"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--gold)] hover:text-[var(--ink)] transition-colors"
             >
               <span>View All 8 Watches</span>
               <ArrowRight className="w-3.5 h-3.5" />

@@ -72,12 +72,12 @@ function ShopContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
       {/* Header Banner */}
-      <div className="border-b border-[var(--sand)]/10 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="border-b border-[var(--sand)] pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] font-medium">
             Atelier Showcase
           </span>
-          <h1 className="font-serif text-3xl sm:text-5xl text-[var(--ivory)] font-light mt-1">
+          <h1 className="font-serif text-3xl sm:text-5xl text-[var(--ink)] font-light mt-1">
             The {BRAND.name} Collection
           </h1>
           <p className="text-sm text-[var(--muted)] mt-2 max-w-xl">

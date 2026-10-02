@@ -86,19 +86,19 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
       {/* Related Timepieces */}
       {relatedProducts.length > 0 && (
-        <section className="pt-16 border-t border-[var(--sand)]/10 space-y-8">
+        <section className="pt-16 border-t border-[var(--sand)] space-y-8">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-xs uppercase tracking-[0.25em] text-[var(--gold)] font-medium">
                 Related Calibers
               </span>
-              <h2 className="font-serif text-2xl sm:text-3xl text-[var(--ivory)] font-light mt-1">
+              <h2 className="font-serif text-2xl sm:text-3xl text-[var(--ink)] font-light mt-1">
                 More From The {product.category} Collection
               </h2>
             </div>
             <Link
               href={`/shop?category=${product.category}`}
-              className="text-xs uppercase tracking-wider text-[var(--gold)] hover:text-[var(--ivory)] transition-colors"
+              className="text-xs uppercase tracking-wider text-[var(--gold)] hover:text-[var(--ink)] transition-colors"
             >
               View All {product.category} &rarr;
             </Link>

@@ -122,7 +122,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       {/* Right Column: Horology Specs & Acquisition */}
       <div className="lg:col-span-5 space-y-8">
         {/* Brand & Title */}
-        <div className="space-y-2 border-b border-[var(--sand)]/10 pb-6">
+        <div className="space-y-2 border-b border-[var(--sand)] pb-6">
           <div className="flex items-center justify-between">
             <span className="text-xs uppercase tracking-[0.25em] text-[var(--gold)] font-medium">
               {product.brand}
@@ -131,7 +131,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               {product.category} Collection
             </span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ivory)] font-light leading-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] font-light leading-tight">
             {product.name}
           </h1>
           <div className="pt-2">
@@ -224,7 +224,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               href={`https://wa.me/${BRAND.whatsapp.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full inline-flex items-center justify-center gap-2.5 border border-[var(--gold)]/30 hover:border-[var(--gold)] text-[var(--gold)] hover:text-[var(--ivory)] py-3 px-6 rounded-lg text-xs uppercase tracking-wider transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2.5 border border-[var(--gold)]/30 hover:border-[var(--gold)] text-[var(--gold)] hover:text-[var(--ink)] py-3 px-6 rounded-lg text-xs uppercase tracking-wider transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Inquire With Concierge On WhatsApp</span>
@@ -248,25 +248,25 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         )}
 
         {/* Delivery & Trust Accordion */}
-        <div className="border-t border-[var(--sand)]/10 pt-6 space-y-4 text-xs text-[var(--muted)]">
+        <div className="border-t border-[var(--sand)] pt-6 space-y-4 text-xs text-[var(--muted)]">
           <div className="flex items-start gap-3">
             <Truck className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[var(--ivory)] font-medium">Secured Transit:</strong> Delivery within 1–3 business days in Lagos; 3–5 business days nationwide. Complimentary on orders over {formatNaira(SHOP.freeShippingThresholdKobo)}.
+              <strong className="text-[var(--ink)] font-medium">Secured Transit:</strong> Delivery within 1–3 business days in Lagos; 3–5 business days nationwide. Complimentary on orders over {formatNaira(SHOP.freeShippingThresholdKobo)}.
             </p>
           </div>
 
           <div className="flex items-start gap-3">
             <ShieldCheck className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[var(--ivory)] font-medium">Official Provenance:</strong> Includes certificate of authenticity and 12-month manufacturer warranty.
+              <strong className="text-[var(--ink)] font-medium">Official Provenance:</strong> Includes certificate of authenticity and 12-month manufacturer warranty.
             </p>
           </div>
 
           <div className="flex items-start gap-3">
             <Clock className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[var(--ivory)] font-medium">Settlement:</strong> Direct corporate wire transfer or Pay on Delivery in supported states.
+              <strong className="text-[var(--ink)] font-medium">Settlement:</strong> Direct corporate wire transfer or Pay on Delivery in supported states.
             </p>
           </div>
         </div>
