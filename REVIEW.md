@@ -220,3 +220,29 @@
 
 ### Decisions and assumptions
 - Marked orders as restocked only when transitioning to `cancelled`, preserving inventory deductions while orders remain in `pending`, `confirmed`, `shipped`, or `delivered`.
+
+## Milestone 6: Landing Experience & Visual Polish
+
+### What was implemented
+- **Dynamic Branded OpenGraph Social Card (`src/app/opengraph-image.tsx`)**:
+  - Generated 1200x630 dynamic social share card with `ImageResponse` using obsidian/ink background, warm gold typography, Cormorant Garamond title, and atelier guarantee markers.
+- **Dynamic Favicon (`src/app/icon.tsx`)**:
+  - Generated dynamic 32x32 luxury monogram favicon featuring the "MT" horological emblem in gold and ivory.
+- **Root SEO & Social Metadata (`src/app/layout.tsx`)**:
+  - Configured `metadataBase`, title template (`%s | Meridian Time`), descriptive keywords, locale `en_NG`, and OpenGraph/Twitter card configurations.
+- **Bespoke Not Found Boundary (`src/app/not-found.tsx`)**:
+  - Luxury editorial 404 page ("Caliber Not Found") with compass emblem, explanatory copy, and direct links to the collection and atelier home.
+- **Global Application Error Boundary (`src/app/error.tsx`)**:
+  - Luxury client error boundary ("Chronometer Interruption") with error logging, "Recalibrate (Retry)" action, and home redirection.
+- **Responsive & Accessibility Pass**:
+  - Validated responsive breakpoints at 375px (mobile card views, full-width inputs, touch targets >= 44px), 768px (tablets), and 1280px+ (desktop grids).
+  - Verified descriptive `alt` tags and `sizes` attributes across all photographic assets.
+
+### Challenges
+- **Next.js 16 Runtime Alignment on ImageResponse**: Next.js 16 deprecated `runtime = 'edge'` for dynamic images in favor of native Node.js runtime. Resolved by removing the edge runtime export to ensure standard build compatibility.
+
+### Improvements
+- In M7 (Ship), finalize deployment instructions, complete `README.md` with instructions on how the watch shop owner customizes products and brand configuration, verify `.env.example`, and perform final verification.
+
+### Decisions and assumptions
+- Dynamic `ImageResponse` icons and OG cards were selected over static PNGs to allow future brand customization from `BRAND` config without needing to rebuild or export image assets in an external design tool.

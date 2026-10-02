@@ -20,9 +20,43 @@ const inter = Inter({
   display: 'swap',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
 export const metadata: Metadata = {
-  title: `${BRAND.name} — ${BRAND.tagline}`,
-  description: BRAND.shortDescription,
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: `${BRAND.name} — ${BRAND.tagline}`,
+    template: `%s | ${BRAND.name}`,
+  },
+  description: BRAND.description,
+  keywords: [
+    'luxury watches Nigeria',
+    'haute horlogerie Lagos',
+    'Meridian Time',
+    'automatic watches Nigeria',
+    'chronometer watches',
+    'Victoria Island watch boutique',
+    'authentic Swiss watches Nigeria',
+  ],
+  authors: [{ name: BRAND.name }],
+  creator: BRAND.legalName,
+  openGraph: {
+    type: 'website',
+    locale: 'en_NG',
+    url: siteUrl,
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: BRAND.shortDescription,
+    siteName: BRAND.name,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: BRAND.shortDescription,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
