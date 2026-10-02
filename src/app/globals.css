@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #0E0E10;
+  --charcoal: #1C1C20;
+  --ivory: #FAF7F2;
+  --sand: #EDE6DA;
+  --gold: #B8956A;
+  --gold-deep: #8F6E47;
+  --muted: #6B6B72;
+  --success: #2F7D5B;
+  --warning: #B7791F;
+  --danger: #B3392F;
+
+  --background: var(--ivory);
+  --foreground: var(--ink);
+}
+
+@theme {
+  --color-ink: var(--ink);
+  --color-charcoal: var(--charcoal);
+  --color-ivory: var(--ivory);
+  --color-sand: var(--sand);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-muted: var(--muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+}
