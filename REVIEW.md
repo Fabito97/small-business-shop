@@ -246,3 +246,33 @@
 
 ### Decisions and assumptions
 - Dynamic `ImageResponse` icons and OG cards were selected over static PNGs to allow future brand customization from `BRAND` config without needing to rebuild or export image assets in an external design tool.
+
+## Milestone 7: Ship, Documentation & Verification
+
+### What was implemented
+- **Comprehensive Owner & Developer Documentation (`README.md`)**:
+  - Detailed project overview, tech stack, architecture, and feature documentation.
+  - Clear getting started instructions with prerequisite versions, environment variable table, database migration (`db:push`), and seeding (`db:seed`).
+  - Production deployment guide for Vercel, including Google Cloud Console redirect URI configuration (`/api/auth/google/callback`).
+  - Store owner management guide: how to edit brand copy and contact info in `src/config/brand.ts`, update shipping fees and Pay on Delivery states in `src/config/shop.ts`, manage inventory via Drizzle Studio (`npx drizzle-kit studio`), and assign administrator roles via `ADMIN_EMAILS`.
+  - Documented known limitations and future payment gateway considerations.
+- **Repository Cleanliness & Secret Audit**:
+  - Verified `.env.local` is strictly excluded from version control in `.gitignore`.
+  - Verified `.env.example` documents all required secrets and configuration keys.
+  - Confirmed no server secrets (such as Google OAuth secret, Mailgun API key, or database connection strings) are exposed in client components or client bundles.
+
+### Challenges
+- None in this milestone. All preceding milestones compile cleanly with zero TypeScript errors or linter issues.
+
+### Final Verification Against Acceptance Criteria (`01_PRD.md`)
+- [x] Visitor can browse, filter, and add to cart without logging in
+- [x] Cart survives refresh; quantity limits respected and capped to stock
+- [x] Google login works on localhost AND the deployed URL via Arctic and database-backed sessions
+- [x] Placing an order creates rows in `orders` + `order_items` in Neon and atomically decrements stock
+- [x] Confirmation email arrives via Mailgun with correct details and non-blocking failure tolerance
+- [x] Order confirmation page shows correct data; cannot be viewed by another user (404 security gate)
+- [x] Admin can see all orders, view performance stats, and update order status (with auto-restock on cancel); non-admin gets blocked
+- [x] Mobile layout is clean, legible, and responsive at 375px, 768px, and 1280px
+- [x] No secrets in client bundle; `.env.example` provided; `.env.local` gitignored
+- [x] README with setup + deploy steps + how the owner changes brand/products complete
+- [x] `npm run build` and `npm run lint` compile with zero errors
