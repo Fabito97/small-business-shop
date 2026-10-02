@@ -26,14 +26,13 @@ src/
 │     └─ admin/orders/[id]/route.ts      # PATCH status (admin)
 ├─ components/ (layout/, shop/, cart/, checkout/, admin/, ui/)
 ├─ config/ (brand.ts, shop.ts)         # shop.ts: currency, shipping fee, free threshold, bank details, NG states
-├─ db/ (index.ts, schema.ts, seed.ts)
-├─ lib/
-│  ├─ auth/session.ts            # create/validate/delete sessions, cookie helpers
-│  ├─ auth/google.ts             # Arctic Google client
-│  ├─ auth/guards.ts             # getCurrentUser, requireUser, requireAdmin
-│  ├─ orders.ts                  # createOrder, cancelOrder, queries
-│  ├─ email/mailgun.ts + templates.ts
-│  ├─ money.ts, validators.ts
+├─ server/                             # Dedicated backend services boundary
+│  ├─ db/ (index.ts, schema.ts, seed.ts)
+│  ├─ auth/ (google.ts, session.ts, guards.ts)
+│  ├─ orders/ (index.ts)
+│  ├─ email/ (mailgun.ts, templates.ts)
+│  └─ index.ts
+├─ lib/ (money.ts, utils.ts, validators.ts)
 ├─ hooks/                        # useProducts, useMyOrders, useAdminOrders, useUpdateOrderStatus
 ├─ store/cart.ts
 ├─ types/index.ts
@@ -58,7 +57,7 @@ OWNER_NOTIFY_EMAIL=                 # optional
 
 ## Auth implementation (Google OAuth + DB sessions)
 
-**`lib/auth/google.ts`**
+**`server/auth/google.ts`**
 ```ts
 import { Google } from 'arctic';
 export const google = new Google(
@@ -75,7 +74,7 @@ export const google = new Google(
 3. Upsert into `users` on `googleId` (update name/avatar/email). Role: if `email` is in `ADMIN_EMAILS` (lowercased compare) set `role='admin'`, otherwise leave as is.
 4. Create a session (below), set the cookie, clear the `g_*` cookies, redirect to `g_next`.
 
-**`lib/auth/session.ts`**
+**`server/auth/session.ts`**
 ```ts
 import { createHash, randomBytes } from 'node:crypto';
 const COOKIE = 'session';
@@ -95,7 +94,7 @@ export async function validateSession(token: string) {
 export async function deleteSession(token: string) { /* delete where id = hash(token) */ }
 ```
 
-**`lib/auth/guards.ts`**
+**`server/auth/guards.ts`**
 ```ts
 export const getCurrentUser = cache(async () => {
   const token = (await cookies()).get('session')?.value;
@@ -110,7 +109,7 @@ Pages: catch and `redirect('/login?next=...')` / `notFound()`. API routes: map `
 **`middleware.ts`:** for `/checkout`, `/orders`, `/order-confirmation/*`, `/admin/*`, redirect to `/login?next=<path>` if the `session` cookie is absent. (Edge runtime can't use the DB, so this is only a UX shortcut.)
 **Header** reads the user in a server component (`getCurrentUser()`) and passes it to the AccountMenu.
 
-## Order creation, `lib/orders.ts`
+## Order creation, `server/orders/index.ts`
 ```ts
 export class OrderError extends Error { constructor(public code: 'EMPTY_CART'|'PRODUCT_UNAVAILABLE'|'OUT_OF_STOCK', msg: string) { super(msg) } }
 
@@ -171,12 +170,12 @@ Guard badges/counts with a `mounted` flag to avoid hydration mismatch. Cart pric
   "paymentMethod": "pay_on_delivery" }   // | "bank_transfer"
 // 201 { "orderNumber": "MT-7K2Q9X" }   errors: 400 validation, 401, 409 { code, message }, 500
 ```
-Flow: `requireUser()` (email from **session**, never the body) → zod validate (merge duplicate productIds, ≤20 items, qty ≤10) → `createOrder()` (map `OrderError` → 409/400) → build email → `try { await sendEmail(...); update orders set emailSentAt = now() } catch { console.error }` → return orderNumber.
+Flow: `requireUser()` (email from **session**, never the body) → zod validate (merge duplicate productIds, ≤20 items, qty ≤10; if `pay_on_delivery`, validate `isPayOnDeliverySupported(shipping.state)`) → `createOrder()` (map `OrderError` → 409/400) → build email → `try { await sendEmail(...); update orders set emailSentAt = now() } catch { console.error }` → return orderNumber.
 
 **`GET /api/orders`**: current user's orders. **`GET /api/orders/[orderNumber]`**: order + items; where `userId = me` unless admin; otherwise 404.
 **`GET /api/admin/orders?status=`** (admin). **`PATCH /api/admin/orders/[id]`** `{ status }` (admin); `cancelled` → `cancelOrder()`.
 
-## Mailgun, `lib/email/mailgun.ts`
+## Mailgun, `server/email/mailgun.ts`
 ```ts
 export async function sendEmail({ to, subject, html, text }: { to: string; subject: string; html: string; text: string }) {
   const form = new FormData();

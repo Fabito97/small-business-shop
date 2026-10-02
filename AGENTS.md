@@ -20,7 +20,7 @@ Required by the task: shop + **checkout page**, data persisted in **Neon** (via 
 If docs conflict, precedence is: this file > `03_ARCHITECTURE.md` > `01_PRD.md` > the rest. If something is ambiguous and not covered, pick the simplest option, note it in the README under "Decisions", and continue. Don't stall.
 
 ## Stack (fixed, don't substitute)
-Next.js 15 (App Router, TypeScript, `src/`), Tailwind, shadcn/ui, lucide-react, **Zustand** (cart, persisted), **TanStack React Query** (client lists), **Drizzle ORM + Neon** (WebSocket `Pool` driver), **Arctic** (Google OAuth) with own DB sessions, **Mailgun HTTP API** via `fetch`, **zod** + react-hook-form, Vercel.
+Next.js 16 (App Router, TypeScript, `src/`), Tailwind, shadcn/ui, lucide-react, **Zustand** (cart, persisted), **TanStack React Query** (client lists), **Drizzle ORM + Neon** (WebSocket `Pool` driver), **Arctic** (Google OAuth) with own DB sessions, **Mailgun HTTP API** via `fetch`, **zod** + react-hook-form, Vercel.
 
 ## Hard rules
 - **No extra scope.** No payment gateway, coupons, reviews, wishlists, product CRUD UI, password auth, i18n. Leave `// FUTURE:` instead.
@@ -29,7 +29,7 @@ Next.js 15 (App Router, TypeScript, `src/`), Tailwind, shadcn/ui, lucide-react, 
 - **Never trust client prices/totals.** `createOrder()` re-reads prices from the DB.
 - **Order creation is a single `db.transaction()`.** Use the `neon-serverless` Pool driver, NOT `neon-http` (it can't do transactions). Out-of-stock throws and rolls back.
 - **There is no RLS.** Every protected page/API route calls `requireUser()` / `requireAdmin()`. Every order query is scoped to `userId` unless the user is admin. Customer email comes from the session, never the request body.
-- **Secrets are server-only.** `import 'server-only'` in `db/`, `lib/auth/`, `lib/email/`, `lib/orders.ts`. Never reference secrets in client components. Only `NEXT_PUBLIC_*` vars may reach the browser.
+- **Secrets are server-only.** `import 'server-only'` in `server/` (e.g. `src/server/db/`, `src/server/auth/`, `src/server/email/`, `src/server/orders/`). Never reference secrets in client components. Only `NEXT_PUBLIC_*` vars may reach the browser.
 - **Email failure must not fail an order.** Catch, `console.error`, leave `emailSentAt` null.
 - **No hardcoded brand text.** Name, tagline, contact, socials, bank details, shipping fee and free-shipping threshold come from `src/config/brand.ts` and `src/config/shop.ts`.
 - **Escape user-provided strings** in email HTML.
@@ -54,7 +54,7 @@ npm run dev          # local dev
 npm run build        # must pass before every commit
 npm run lint
 npm run db:push      # drizzle-kit push (sync schema to Neon)
-npm run db:seed      # tsx --env-file=.env.local src/db/seed.ts
+npm run db:seed      # tsx --env-file=.env.local src/server/db/seed.ts
 npx drizzle-kit studio
 ```
 Add these scripts to `package.json` during M0.

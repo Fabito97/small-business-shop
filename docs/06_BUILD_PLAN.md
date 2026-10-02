@@ -3,11 +3,11 @@
 ## M0: Scaffold
 - `create-next-app` (TS, Tailwind, App Router, src dir). Install: `drizzle-orm @neondatabase/serverless ws arctic zustand @tanstack/react-query zod react-hook-form @hookform/resolvers lucide-react sonner server-only` and dev: `drizzle-kit tsx @types/ws`. Init shadcn.
 - Add `config/brand.ts`, `config/shop.ts`, `lib/money.ts`, fonts, color tokens, `.env.example`, db scripts.
-- Copy `drizzle-files/*` into `src/db/` + root config.
+- Schema, seed, and db client in `src/server/db/` + root config.
 - **Done when:** app runs; tokens/fonts applied; `drizzle-kit push` + `db:seed` fill Neon.
 
 ## M1: Auth
-- `lib/auth/*`, the three `/api/auth` routes, `middleware.ts`, `/login`, Header AccountMenu.
+- `server/auth/*`, the three `/api/auth` routes, `middleware.ts`, `/login`, Header AccountMenu.
 - **Done when:** Google sign-in works locally; user + session rows appear; logout deletes the session; `ADMIN_EMAILS` yields `role='admin'`; tampered `state` is rejected.
 
 ## M2: Catalogue
@@ -19,7 +19,7 @@
 - **Done when:** persists across refresh, caps at stock, shipping rule applied.
 
 ## M4: Checkout + orders + email
-- Checkout form, `createOrder()` + `POST /api/orders`, Mailgun lib + templates, confirmation page, `/orders`.
+- Checkout form, `createOrder()` + `POST /api/orders`, Mailgun lib + templates in `server/email/`, confirmation page, `/orders`.
 - **Done when:** order + items in Neon, stock decremented, email received, a forced out-of-stock rolls back cleanly, another user gets 404 on someone else's order.
 
 ## M5: Admin

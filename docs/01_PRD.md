@@ -66,7 +66,7 @@ Two-column (stacks on mobile): form left, order summary right.
 
 **Form fields** (react-hook-form + zod):
 - Full name (prefilled from Google), Email (prefilled, read-only), Phone (Nigerian format, validate loosely), Address, City, State (select of Nigerian states), Delivery notes (optional).
-- **Payment method** radio: `Pay on delivery` or `Bank transfer` (instructions shown from config). No real payment gateway.
+- **Payment method** radio: `Pay on delivery` (enabled only for states configured in `src/config/shop.ts` via `PAY_ON_DELIVERY_SUPPORTED_STATES`, defaults to Lagos; disabled with message if state is unsupported) or `Bank transfer` (instructions shown from config). No real payment gateway.
 - Submit "Place Order".
 
 **On submit:**

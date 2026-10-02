@@ -10,7 +10,7 @@ A polished, high-performance storefront and checkout platform designed for a lux
 
 ## Tech Stack
 
-- **Framework:** Next.js 15 (App Router, TypeScript, `src/` directory layout)
+- **Framework:** Next.js 16 (App Router, TypeScript, `src/` directory layout)
 - **Styling:** Tailwind CSS + Google Fonts (Cormorant Garamond & Inter)
 - **Icons & UI:** Lucide React, Sonner toasts, shadcn/ui components
 - **State Management:** Zustand with localStorage persistence for cart state
@@ -75,13 +75,13 @@ npm run lint
 ### Editing Brand Information & Pricing Rules
 All brand copy, contact details, social links, and banking details are centrally located in:
 - `src/config/brand.ts`: Brand name, tagline, about story, WhatsApp contact, phone, location, trust badges.
-- `src/config/shop.ts`: Shipping fee, free delivery threshold, corporate bank account details for wire transfers, supported Nigerian delivery states.
+- `src/config/shop.ts`: Shipping fee, free delivery threshold, corporate bank account details for wire transfers, all Nigerian states, and `PAY_ON_DELIVERY_SUPPORTED_STATES` (which states are eligible for Pay on Delivery).
 
 ### Editing Products & Stock
 In version 1.0, product records and inventory can be inspected and updated directly through:
 1. **Drizzle Studio:** Run `npx drizzle-kit studio` to launch a visual database management dashboard.
 2. **Neon Console:** Use the Neon SQL Editor or Tables UI at [neon.tech](https://neon.tech).
-3. **Seed File:** Modify `src/db/seed.ts` and re-run `npm run db:seed`.
+3. **Seed File:** Modify `src/server/db/seed.ts` and re-run `npm run db:seed`.
 
 ### Making an Admin
 Add any user's Google email address to the `ADMIN_EMAILS` environment variable in `.env.local` or Vercel. Upon their next Google login, their user role will automatically be set to `admin`.

@@ -1,3 +1,11 @@
+export const PAY_ON_DELIVERY_SUPPORTED_STATES = ['Lagos'] as const;
+export type PayOnDeliverySupportedState = (typeof PAY_ON_DELIVERY_SUPPORTED_STATES)[number];
+
+export function isPayOnDeliverySupported(state?: string | null): boolean {
+  if (!state) return false;
+  return (PAY_ON_DELIVERY_SUPPORTED_STATES as readonly string[]).includes(state);
+}
+
 export const SHOP = {
   currencyCode: 'NGN',
   currencySymbol: '₦',
@@ -14,7 +22,7 @@ export const SHOP = {
     {
       id: 'pay_on_delivery',
       label: 'Pay on Delivery',
-      description: 'Available within Lagos and select major cities. Cash or card upon arrival.',
+      description: 'Available in supported delivery regions. Cash or card upon arrival.',
     },
     {
       id: 'bank_transfer',
@@ -22,6 +30,7 @@ export const SHOP = {
       description: 'Transfer directly to our corporate bank account. Details provided on confirmation.',
     },
   ] as const,
+  payOnDeliveryStates: PAY_ON_DELIVERY_SUPPORTED_STATES,
   categories: [
     { id: 'dress', label: 'Dress', description: 'Slim profiles, champagne dials, and fine leather.' },
     { id: 'sport', label: 'Sport', description: 'Chronographs and robust divers built for resilience.' },
@@ -36,3 +45,4 @@ export const SHOP = {
     'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
   ] as const,
 } as const;
+

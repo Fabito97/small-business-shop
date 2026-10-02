@@ -1,6 +1,6 @@
 # Database Design (Neon Postgres + Drizzle)
 
-Files in `drizzle-files/`: copy `schema.ts`, `seed.ts`, `index.ts` into `src/db/` and `drizzle.config.ts` to the project root.
+Files live in `src/server/db/`: `schema.ts`, `seed.ts`, `index.ts` and `drizzle.config.ts` in the project root.
 
 ## Entity overview
 ```
@@ -26,10 +26,10 @@ users ──1:N── sessions
 ## Workflow
 ```
 npx drizzle-kit push     # create/update tables in Neon (fine for this project)
-npm run db:seed          # tsx --env-file=.env.local src/db/seed.ts
+npm run db:seed          # tsx --env-file=.env.local src/server/db/seed.ts
 npx drizzle-kit studio   # optional visual browser
 ```
-Add scripts to `package.json`: `"db:push": "drizzle-kit push"`, `"db:seed": "tsx --env-file=.env.local src/db/seed.ts"`. `drizzle.config.ts` must also see `DATABASE_URL` (use `dotenv` with `.env.local` or run with `--env-file`). The seed script cannot import `server-only`, so remove that import line from `index.ts` or keep a separate `seed-db.ts` client.
+Add scripts to `package.json`: `"db:push": "drizzle-kit push"`, `"db:seed": "tsx --env-file=.env.local src/server/db/seed.ts"`. `drizzle.config.ts` loads `.env.local` via `dotenv`. The seed script has a dedicated connection pool so `src/server/db/index.ts` can keep `import 'server-only'`.
 
 ## Product images
 Hosted URLs (Unsplash placeholders in seed). Later the owner can use any image host (Cloudinary, Vercel Blob, etc.). Add the host to `next.config.ts` `images.remotePatterns`.
