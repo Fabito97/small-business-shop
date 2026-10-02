@@ -129,6 +129,7 @@
 
 ### Challenges
 - **React 19 / ESLint `react-hooks/set-state-in-effect`**: Setting `mounted = true` in a `useEffect` triggers an ESLint warning for synchronous cascading renders in React 19. Solved by replacing state-based mount tracking with `useSyncExternalStore`, guaranteeing safe server/client synchronization with zero extra re-renders.
+- **`getServerSnapshot` non-primitive selector reference**: Passing a selector that returns a newly instantiated object (`selectFreeShippingProgress`) caused React's `useSyncExternalStore` in Next.js 16 to detect unstable snapshots across renders ("The result of getServerSnapshot should be cached to avoid an infinite loop"). Solved by selecting the primitive `subtotalKobo` and deriving progress via `getFreeShippingProgress(subtotalKobo)`.
 
 ### Improvements
 - In M4 (Checkout & Orders), build the single-transaction order placement (`db.transaction()`), address form with Nigerian state validation, dynamic Pay on Delivery check, Mailgun confirmation email, and order confirmation receipt.
@@ -188,3 +189,34 @@
 ### Decisions and assumptions
 - For Pay on Delivery, if the user changes their delivery state to an unsupported region, the form dynamically switches the payment selection to Direct Bank Transfer with clear feedback explaining the constraint.
 - Order confirmation page is accessible to both the order owner and administrators, returning a strict 404 to any other user.
+
+## Milestone 5: Admin Operations Console
+
+### What was implemented
+- **Admin Backend Services (`src/server/orders/index.ts`)**:
+  - `getAdminStats()`: Computes total order count, pending fulfillment count, and gross non-cancelled revenue in kobo.
+  - `getAdminOrders(statusFilter)`: Queries all customer orders with joined line-item snapshots, with optional status filtering (`pending`, `confirmed`, `shipped`, `delivered`, `cancelled`).
+  - `updateOrderStatus(orderId, newStatus)`: Atomically updates an order's lifecycle. When status is transitioned to `cancelled`, delegates to `cancelOrder()` to automatically restock all order items in active product inventory.
+- **Admin API Route Handlers (`src/app/api/admin/orders/`)**:
+  - `GET /api/admin/orders`: Secured with `requireAdmin()`. Supports status filtering via search parameters and returns orders list and operational statistics.
+  - `PATCH /api/admin/orders/[id]`: Secured with `requireAdmin()`. Validates status updates with Zod and returns the updated order entity. Non-admins receive HTTP 403; unauthenticated users receive HTTP 401.
+- **Client State & Data Fetching (`src/hooks/useAdminOrders.ts`)**:
+  - `useAdminOrders(statusFilter)`: TanStack Query hook with automated stale-time caching.
+  - `useUpdateOrderStatus()`: TanStack Mutation with automated query cache invalidation and toast feedback upon status update.
+- **Interactive Admin Operations Console (`src/components/admin/AdminDashboardClient.tsx`)**:
+  - High-level metric cards: Total Revenue (formatted via `formatNaira()`), Total Orders, and Pending Orders with urgency indicator.
+  - Status pill filter navigation for switching views across order lifecycles.
+  - Client-side search filtering by order reference, customer name, email, or city.
+  - Responsive table with interactive status dropdowns enabling immediate status changes.
+  - Slide-over order detail inspection drawer with client contacts, delivery address, timepieces acquired, line totals, cancellation warning, and link to public receipt.
+- **Route Authorization & Security**:
+  - Enforced server-side gate in `src/app/admin/page.tsx`: unauthenticated users are redirected to `/login?next=/admin`, and non-admin authenticated users receive a 404 (`notFound()`) to avoid revealing internal routes.
+
+### Challenges
+- **Authorization UX vs Security**: PRD specified that non-admin users should get a 404 on the admin page to conceal administrative endpoints. Solved by catching unauthorized users in `src/app/admin/page.tsx` and calling Next.js's native `notFound()` while maintaining HTTP 403 on API endpoints.
+
+### Improvements
+- In M6 (Landing + Polish), build out additional editorial landing sections, dynamic OpenGraph/metadata tags, favicon, custom error and not-found boundaries, and complete a responsive/accessibility pass.
+
+### Decisions and assumptions
+- Marked orders as restocked only when transitioning to `cancelled`, preserving inventory deductions while orders remain in `pending`, `confirmed`, `shipped`, or `delivered`.

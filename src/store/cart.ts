@@ -104,15 +104,14 @@ export const selectCartTotal = (state: CartState) => {
   return selectCartSubtotal(state) + selectCartShippingFee(state);
 };
 
-export const selectFreeShippingProgress = (state: CartState) => {
-  const subtotal = selectCartSubtotal(state);
+export function getFreeShippingProgress(subtotalKobo: number) {
   const threshold = SHOP.freeShippingThresholdKobo;
-  const progressPercent = Math.min(100, Math.round((subtotal / threshold) * 100));
-  const remainingKobo = Math.max(0, threshold - subtotal);
+  const progressPercent = Math.min(100, Math.round((subtotalKobo / threshold) * 100));
+  const remainingKobo = Math.max(0, threshold - subtotalKobo);
 
   return {
-    isFree: subtotal >= threshold,
+    isFree: subtotalKobo >= threshold,
     progressPercent,
     remainingKobo,
   };
-};
+}

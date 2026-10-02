@@ -19,7 +19,7 @@ import {
   selectCartSubtotal,
   selectCartShippingFee,
   selectCartTotal,
-  selectFreeShippingProgress,
+  getFreeShippingProgress,
 } from '@/store/cart';
 import { formatNaira } from '@/lib/money';
 import { useIsMounted } from '@/hooks/useIsMounted';
@@ -35,7 +35,7 @@ export default function CartPage() {
   const subtotalKobo = useCartStore(selectCartSubtotal);
   const shippingFeeKobo = useCartStore(selectCartShippingFee);
   const totalKobo = useCartStore(selectCartTotal);
-  const freeShipping = useCartStore(selectFreeShippingProgress);
+  const freeShipping = getFreeShippingProgress(subtotalKobo);
 
   // Avoid hydration mismatch while reading from persisted localStorage
   if (!mounted) {

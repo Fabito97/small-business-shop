@@ -17,7 +17,7 @@ import {
   useCartStore,
   selectCartCount,
   selectCartSubtotal,
-  selectFreeShippingProgress,
+  getFreeShippingProgress,
 } from '@/store/cart';
 import { formatNaira } from '@/lib/money';
 
@@ -30,7 +30,7 @@ export function CartDrawer() {
 
   const itemCount = useCartStore(selectCartCount);
   const subtotalKobo = useCartStore(selectCartSubtotal);
-  const freeShipping = useCartStore(selectFreeShippingProgress);
+  const freeShipping = getFreeShippingProgress(subtotalKobo);
 
   // Close drawer on escape key
   useEffect(() => {

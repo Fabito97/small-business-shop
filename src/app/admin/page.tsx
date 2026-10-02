@@ -1,54 +1,55 @@
-import { requireAdmin } from '@/server/auth/guards';
-import { ShieldCheck, Package, Users, DollarSign } from 'lucide-react';
+import { Metadata } from 'next';
+import { notFound, redirect } from 'next/navigation';
+import { ShieldCheck } from 'lucide-react';
+
+import { getCurrentUser } from '@/server/auth/guards';
+import { AdminDashboardClient } from '@/components/admin/AdminDashboardClient';
+import { BRAND } from '@/config/brand';
+
+export const metadata: Metadata = {
+  title: `Store Operations & Administration | ${BRAND.name}`,
+  description: 'Operations console for timepiece fulfillment and revenue logs.',
+};
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
-  const admin = await requireAdmin();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect('/login?next=/admin');
+  }
+
+  // Security Gate: non-admin gets 404 to avoid disclosing existence of admin routes
+  if (user.role !== 'admin') {
+    notFound();
+  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--sand)]/10 pb-6">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold)] text-xs font-semibold uppercase tracking-wider mb-2">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Admin Console</span>
+    <div className="min-h-screen bg-[var(--ivory)] py-10 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--sand)] pb-6">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 text-[var(--gold-deep)] text-xs font-semibold uppercase tracking-wider mb-2">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Admin Operations Console</span>
+            </div>
+            <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] font-normal">
+              Store Operations
+            </h1>
+            <p className="text-xs text-[var(--muted)] mt-1">
+              Authenticated Administrator:{' '}
+              <span className="font-medium text-[var(--ink)]">{user.name || user.email}</span>{' '}
+              <span className="ml-1 uppercase tracking-wider text-[10px] px-1.5 py-0.5 rounded bg-[var(--gold)]/20 text-[var(--gold-deep)] font-bold">
+                {user.role}
+              </span>
+            </p>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ivory)] font-light">
-            Store Operations
-          </h1>
-          <p className="text-xs text-[var(--muted)] mt-1">
-            Logged in as {admin.name || admin.email} ({admin.role})
-          </p>
-        </div>
-      </div>
-
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="p-6 rounded-xl bg-[var(--charcoal)] border border-[var(--gold)]/20">
-          <div className="flex items-center justify-between text-[var(--gold)]">
-            <span className="text-xs uppercase tracking-wider font-semibold">Orders</span>
-            <Package className="w-5 h-5" />
-          </div>
-          <p className="font-serif text-3xl text-[var(--ivory)] font-light mt-3">0</p>
-          <p className="text-xs text-[var(--muted)] mt-1">Pending fulfillment</p>
         </div>
 
-        <div className="p-6 rounded-xl bg-[var(--charcoal)] border border-[var(--gold)]/20">
-          <div className="flex items-center justify-between text-[var(--gold)]">
-            <span className="text-xs uppercase tracking-wider font-semibold">Clients</span>
-            <Users className="w-5 h-5" />
-          </div>
-          <p className="font-serif text-3xl text-[var(--ivory)] font-light mt-3">Active</p>
-          <p className="text-xs text-[var(--muted)] mt-1">Registered Google profiles</p>
-        </div>
-
-        <div className="p-6 rounded-xl bg-[var(--charcoal)] border border-[var(--gold)]/20">
-          <div className="flex items-center justify-between text-[var(--gold)]">
-            <span className="text-xs uppercase tracking-wider font-semibold">Settlement</span>
-            <DollarSign className="w-5 h-5" />
-          </div>
-          <p className="font-serif text-3xl text-[var(--ivory)] font-light mt-3">NGN</p>
-          <p className="text-xs text-[var(--muted)] mt-1">Direct Bank Wire & Delivery</p>
-        </div>
+        {/* Interactive Dashboard */}
+        <AdminDashboardClient admin={user} />
       </div>
     </div>
   );
