@@ -395,3 +395,19 @@
 ### Decisions and assumptions
 - Product prices are inputted in standard Nigerian Naira (₦) for administrative convenience and automatically converted to integer kobo (`Math.round(priceNaira * 100)`) before transmission, strictly upholding the repository's integer kobo rule.
 - Creating a watch automatically invalidates both client-side React Query caches and Next.js route caches (`/` and `/shop`) so new additions appear immediately across the entire site without requiring a server reboot.
+
+## Vercel OAuth State Cookie & Next.js Serverless Alignment
+
+### What was implemented
+- **Reliable Serverless Cookie Serialization on Redirects (`src/app/api/auth/google/route.ts`, `callback/route.ts`, `logout/route.ts`)**:
+  - Replaced native `Response.redirect()` with `NextResponse.redirect()` across all OAuth and session management routes.
+  - Attached transient OAuth cookies (`g_state`, `g_code_verifier`, `g_next`) and persistent session cookies (`meridian_session`) directly onto `response.cookies.set(...)` in addition to `cookieStore.set()`.
+- **Dynamic Origin Preservation & Trailing Slash Sanitization (`src/server/auth/google.ts`)**:
+  - Added trailing-slash sanitization to `NEXT_PUBLIC_SITE_URL` to prevent double-slash redirect paths (`//api/auth/google/callback`).
+  - Added Vercel environment fallbacks (`VERCEL_PROJECT_PRODUCTION_URL` / `VERCEL_URL`) so deployed environments resolve legitimate HTTPS URLs instead of defaulting to localhost.
+  - Updated callback destination to preserve the requesting origin (`new URL(nextUrl, request.url)`).
+- **OAuth Diagnostic Telemetry (`src/server/services/auth.service.ts`)**:
+  - Added granular error diagnostic logging for state verification failures (`hasCode`, `hasState`, `hasStoredState`, `hasStoredVerifier`, `stateMatch`).
+
+### Challenges
+- In Next.js App Router on Vercel serverless functions, returning raw Web API `Response.redirect()` bypasses the internal cookie store buffer, causing the browser to redirect to Google without receiving the `Set-Cookie` headers for `g_state`. Resolved by using `NextResponse.redirect()` and explicitly writing cookies onto the response object.

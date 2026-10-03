@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 import { AuthService, AuthServiceError, SESSION_COOKIE_NAME } from '@/server/services/auth.service';
 
 export async function GET(request: Request): Promise<Response> {
@@ -22,23 +23,29 @@ export async function GET(request: Request): Promise<Response> {
 
     // Set persistent session cookie
     const isProd = process.env.NODE_ENV === 'production';
-    cookieStore.set(SESSION_COOKIE_NAME, token, {
+    const sessionCookieOptions = {
       path: '/',
       httpOnly: true,
       secure: isProd,
-      sameSite: 'lax',
+      sameSite: 'lax' as const,
       expires: expiresAt,
-    });
+    };
 
-    // Clean up transient OAuth cookies
+    cookieStore.set(SESSION_COOKIE_NAME, token, sessionCookieOptions);
     cookieStore.delete('g_state');
     cookieStore.delete('g_code_verifier');
     cookieStore.delete('g_next');
 
-    // Redirect to requested next page or home
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const destination = new URL(nextUrl, baseUrl);
-    return Response.redirect(destination.toString(), 302);
+    // Redirect to requested next page on current domain
+    const destination = new URL(nextUrl, request.url);
+    const response = NextResponse.redirect(destination.toString(), 302);
+
+    response.cookies.set(SESSION_COOKIE_NAME, token, sessionCookieOptions);
+    response.cookies.delete('g_state');
+    response.cookies.delete('g_code_verifier');
+    response.cookies.delete('g_next');
+
+    return response;
   } catch (error: unknown) {
     if (error instanceof AuthServiceError) {
       return new Response(

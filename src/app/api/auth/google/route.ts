@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 import { AuthService } from '@/server/services/auth.service';
 
 export async function GET(request: Request): Promise<Response> {
@@ -21,5 +22,10 @@ export async function GET(request: Request): Promise<Response> {
   cookieStore.set('g_code_verifier', codeVerifier, cookieOptions);
   cookieStore.set('g_next', nextUrl, cookieOptions);
 
-  return Response.redirect(authUrl.toString(), 302);
+  const response = NextResponse.redirect(authUrl.toString(), 302);
+  response.cookies.set('g_state', state, cookieOptions);
+  response.cookies.set('g_code_verifier', codeVerifier, cookieOptions);
+  response.cookies.set('g_next', nextUrl, cookieOptions);
+
+  return response;
 }

@@ -89,6 +89,13 @@ export class AuthService {
     }
 
     if (!code || !state || !storedState || !storedVerifier || state !== storedState) {
+      console.error('[AuthService] OAuth state validation failed:', {
+        hasCode: Boolean(code),
+        hasState: Boolean(state),
+        hasStoredState: Boolean(storedState),
+        hasStoredVerifier: Boolean(storedVerifier),
+        stateMatch: state === storedState,
+      });
       throw new AuthServiceError('INVALID_STATE', 'Invalid or tampered OAuth state parameter.');
     }
 

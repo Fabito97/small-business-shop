@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 import { AuthService, SESSION_COOKIE_NAME } from '@/server/services/auth.service';
 
 export async function POST(request: Request): Promise<Response> {
@@ -20,14 +21,16 @@ export async function POST(request: Request): Promise<Response> {
   const accept = request.headers.get('accept') || '';
 
   if (contentType.includes('application/x-www-form-urlencoded') || accept.includes('text/html')) {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    return Response.redirect(new URL('/', baseUrl).toString(), 303);
+    const destination = new URL('/', request.url);
+    const response = NextResponse.redirect(destination.toString(), 303);
+    response.cookies.delete(SESSION_COOKIE_NAME);
+    return response;
   }
 
   return new Response(null, { status: 204 });
 }
 
-export async function GET(): Promise<Response> {
+export async function GET(request: Request): Promise<Response> {
   // Support standard GET logout redirect for convenience
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
@@ -41,6 +44,8 @@ export async function GET(): Promise<Response> {
   }
 
   cookieStore.delete(SESSION_COOKIE_NAME);
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  return Response.redirect(new URL('/', baseUrl).toString(), 302);
+  const destination = new URL('/', request.url);
+  const response = NextResponse.redirect(destination.toString(), 302);
+  response.cookies.delete(SESSION_COOKIE_NAME);
+  return response;
 }
