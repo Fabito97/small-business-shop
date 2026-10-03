@@ -252,7 +252,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           <div className="flex items-start gap-3">
             <Truck className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[var(--ink)] font-medium">Fast Delivery:</strong> Delivery within 1–3 business days in Lagos; 3–5 business days nationwide. Free delivery on orders over {formatNaira(SHOP.freeShippingThresholdKobo)}.
+              <strong className="text-[var(--ink)] font-medium">Fast Delivery:</strong> Delivery within 1–2 business days in Anambra; 3–5 business days nationwide. Free delivery on orders over {formatNaira(SHOP.freeShippingThresholdKobo)}.
             </p>
           </div>
 
@@ -266,7 +266,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           <div className="flex items-start gap-3">
             <Clock className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[var(--ink)] font-medium">Payment Options:</strong> Bank transfer, online payment, or Pay on Delivery (in Lagos).
+              <strong className="text-[var(--ink)] font-medium">Payment Options:</strong> Bank transfer, online payment, or Pay on Delivery (in Anambra & Lagos).
             </p>
           </div>
         </div>

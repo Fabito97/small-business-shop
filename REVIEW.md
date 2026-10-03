@@ -364,3 +364,34 @@
 
 ### Decisions and assumptions
 - Preserved existing product database identifiers and cart persistence keys (`meridian_cart_v1`) to prevent cache or hydration invalidation for active sessions while completely updating all customer-facing copy.
+
+## Admin Product Creation & Inventory Management
+
+### What was implemented
+- **Domain Service Layer (`src/server/services/product.service.ts`)**:
+  - Implemented `createProduct(input)`: Generates URL-safe slugs with automated collision resolution (e.g. `rolex-submariner-2`), validates price in integer kobo, and persists the new product record into Neon.
+  - Implemented `listAllProducts()`: Queries all watches in the catalog sorted by creation recency for administrative overview.
+- **Validation Schemas (`src/lib/validators.ts`)**:
+  - Added `productCategorySchema`: Restricts category inputs to `dress`, `sport`, `classic`, and `smart`.
+  - Added `createProductSchema`: Server-side Zod validation ensuring required fields, image URLs, and integer kobo pricing.
+  - Added `createProductFormSchema`: Client-side schema tailored for user input in Naira (`priceNaira`) and React Hook Form validation.
+- **Admin API Controller (`src/app/api/admin/products/route.ts`)**:
+  - `GET /api/admin/products`: Guarded by `requireAdmin()`, returns all catalog products.
+  - `POST /api/admin/products`: Guarded by `requireAdmin()`, parses body, saves new product via `ProductService.createProduct()`, triggers cache revalidation on `/shop` and `/` (`revalidatePath`), and returns HTTP 201 with the created product entity.
+- **Client Hooks (`src/hooks/useAdminProducts.ts`)**:
+  - `useAdminProducts()`: TanStack Query hook fetching all watches with stale-time caching.
+  - `useCreateProduct()`: TanStack Mutation hook that posts new product data, automatically invalidates both `['admin', 'products']` and `['products']` caches, and triggers toast notifications.
+- **Admin Inventory Dashboard & Creation Modal (`src/components/admin/`)**:
+  - `AdminDashboardClient.tsx`: Added dual tab navigation (**Customer Orders** and **Watch Inventory**), an inventory statistics counter, and a prominent **+ Add New Watch** action button.
+  - Watch Inventory Table: Lists watch thumbnail, title, brand, category badge, formatted Naira price, real-time stock pill (In Stock, Low Stock, Out of Stock), Featured flag, and a direct link to view the watch in the public store.
+  - `CreateProductModal.tsx`: Comprehensive modal with 4 curated watch image presets (with instant previews), custom image URL support, category selector, live Naira price formatting display, stock count, movement/specs, and homepage featured toggle.
+- **Image Domain Configuration (`next.config.ts`)**:
+  - Enabled wildcard remote patterns (`https://**`) to ensure any custom image URL provided by the administrator renders safely with Next.js Image optimization without breaking.
+
+### Challenges
+- **React Hook Form / Zod 4 Type Alignment:** In Zod 4, fields with `.default()` create a variance between `z.input` and `z.output`, causing `@hookform/resolvers/zod` to flag type incompatibilities with `useForm<T>`. Resolved by defining pure required field schemas for the form while supplying defaults in `useForm({ defaultValues: ... })`.
+- **Wildcard Image Host Security & Compatibility:** Next.js throws an error if an administrator inputs an image URL from an unlisted CDN domain. Resolved by adding a flexible HTTPS remote pattern in `next.config.ts`.
+
+### Decisions and assumptions
+- Product prices are inputted in standard Nigerian Naira (₦) for administrative convenience and automatically converted to integer kobo (`Math.round(priceNaira * 100)`) before transmission, strictly upholding the repository's integer kobo rule.
+- Creating a watch automatically invalidates both client-side React Query caches and Next.js route caches (`/` and `/shop`) so new additions appear immediately across the entire site without requiring a server reboot.

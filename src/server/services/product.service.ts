@@ -186,4 +186,79 @@ export class ProductService {
 
     return rows.map((r) => r.slug);
   }
+
+  /**
+   * Retrieves all products for admin inventory management (sorted by recency).
+   */
+  static async listAllProducts(): Promise<Product[]> {
+    return await db
+      .select()
+      .from(products)
+      .orderBy(desc(products.createdAt));
+  }
+
+  /**
+   * Creates a new product in the catalog.
+   */
+  static async createProduct(input: {
+    name: string;
+    brand: string;
+    description: string;
+    priceKobo: number;
+    category: Product['category'];
+    imageUrl: string;
+    stock: number;
+    featured?: boolean;
+    movement?: string | null;
+    caseSizeMm?: number | null;
+    strap?: string | null;
+    waterResistance?: string | null;
+    gallery?: string[];
+  }): Promise<Product> {
+    const baseSlug = slugify(input.name);
+    let finalSlug = baseSlug || `watch-${Date.now().toString(36)}`;
+
+    // Verify slug uniqueness
+    const existing = await db
+      .select({ id: products.id })
+      .from(products)
+      .where(eq(products.slug, finalSlug))
+      .limit(1);
+
+    if (existing.length > 0) {
+      finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+    }
+
+    const [created] = await db
+      .insert(products)
+      .values({
+        slug: finalSlug,
+        name: input.name.trim(),
+        brand: input.brand.trim() || 'Dave Store',
+        description: input.description.trim(),
+        priceKobo: Math.round(input.priceKobo),
+        category: input.category,
+        imageUrl: input.imageUrl.trim(),
+        stock: Math.max(0, Math.floor(input.stock)),
+        featured: Boolean(input.featured),
+        movement: input.movement?.trim() || null,
+        caseSizeMm: input.caseSizeMm ? Math.floor(input.caseSizeMm) : null,
+        strap: input.strap?.trim() || null,
+        waterResistance: input.waterResistance?.trim() || null,
+        gallery: input.gallery || [],
+        isActive: true,
+      })
+      .returning();
+
+    return created;
+  }
+}
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }

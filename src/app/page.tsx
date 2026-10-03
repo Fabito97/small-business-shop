@@ -30,7 +30,7 @@ export default async function HomePage() {
             <div className="lg:col-span-6 space-y-6 text-center lg:text-left z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/25 text-[var(--gold)] text-[11px] uppercase tracking-[0.25em] font-medium">
                 <Sparkles className="w-3 h-3" />
-                <span>Original Wristwatches · Lagos, Nigeria</span>
+                <span>Original Wristwatches · Main Market, Onitsha</span>
               </div>
 
               <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-light text-[var(--ink)] tracking-tight leading-[1.08]">
@@ -295,7 +295,7 @@ export default async function HomePage() {
                     Fast Delivery
                   </h4>
                   <p className="text-[11px] text-[var(--muted)] mt-0.5">
-                    Doorstep delivery across Lagos and all 36 states.
+                    Fast delivery across Anambra and all 36 states nationwide.
                   </p>
                 </div>
               </div>

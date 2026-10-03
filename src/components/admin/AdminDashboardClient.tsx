@@ -16,12 +16,17 @@ import {
   Banknote,
   AlertTriangle,
   RotateCw,
+  Plus,
+  Watch,
+  Sparkles,
 } from 'lucide-react';
 
 import { useAdminOrders, useUpdateOrderStatus, type AdminOrderWithItems } from '@/hooks/useAdminOrders';
+import { useAdminProducts } from '@/hooks/useAdminProducts';
 import { formatNaira } from '@/lib/money';
 import { StatusBadge, type OrderStatus } from '@/components/ui/StatusBadge';
 import type { User } from '@/server/db/schema';
+import { CreateProductModal } from './CreateProductModal';
 
 interface AdminDashboardClientProps {
   admin: User;
@@ -37,15 +42,38 @@ const STATUS_FILTERS: Array<{ id: string; label: string }> = [
 ];
 
 export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
+  const [activeTab, setActiveTab] = useState<'orders' | 'inventory'>('orders');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [productSearch, setProductSearch] = useState('');
+
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeOrder, setActiveOrder] = useState<AdminOrderWithItems | null>(null);
 
   const { data, isLoading, isError, error, refetch, isFetching } = useAdminOrders(selectedStatus);
+  const {
+    data: productsData,
+    isLoading: isLoadingProducts,
+    refetch: refetchProducts,
+    isFetching: isFetchingProducts,
+  } = useAdminProducts();
   const updateStatusMutation = useUpdateOrderStatus();
 
   const orders = data?.orders || [];
   const stats = data?.stats || { totalOrders: 0, pendingOrders: 0, totalRevenueKobo: 0 };
+  const products = productsData?.products || [];
+
+  // Filter products by local search query
+  const filteredProducts = products.filter((p) => {
+    if (!productSearch.trim()) return true;
+    const q = productSearch.toLowerCase();
+    return (
+      p.name.toLowerCase().includes(q) ||
+      p.brand.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.description.toLowerCase().includes(q)
+    );
+  });
 
   // Filter orders by local search query (orderNumber, customerName, customerEmail)
   const filteredOrders = orders.filter((o) => {
@@ -65,8 +93,48 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
   };
 
   return (
-    <div className="space-y-10">
-      {/* Overview Stat Cards */}
+    <div className="space-y-8">
+      {/* Top Header Controls / Tab Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--sand)]">
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => setActiveTab('orders')}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+              activeTab === 'orders'
+                ? 'bg-[var(--ink)] text-[var(--ivory)] shadow-sm'
+                : 'bg-white border border-[var(--sand)] text-[var(--muted)] hover:text-[var(--ink)]'
+            }`}
+          >
+            Customer Orders ({orders.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('inventory')}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+              activeTab === 'inventory'
+                ? 'bg-[var(--ink)] text-[var(--ivory)] shadow-sm'
+                : 'bg-white border border-[var(--sand)] text-[var(--muted)] hover:text-[var(--ink)]'
+            }`}
+          >
+            Watch Inventory ({products.length})
+          </button>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsCreateModalOpen(true)}
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] font-semibold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Add New Watch</span>
+        </button>
+      </div>
+
+      {/* ORDERS TAB */}
+      {activeTab === 'orders' && (
+        <div className="space-y-8">
+          {/* Overview Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {/* Total Revenue */}
         <div className="p-6 rounded-xl bg-white border border-[var(--sand)] shadow-sm space-y-3">
@@ -312,6 +380,203 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
           </div>
         )}
       </div>
+    </div>
+  )}
+
+  {/* WATCH INVENTORY VIEW */}
+  {activeTab === 'inventory' && (
+    <div className="space-y-6">
+      {/* Inventory Stats & Search Bar */}
+      <div className="bg-white border border-[var(--sand)] rounded-xl p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-6">
+            <div>
+              <span className="text-xs uppercase tracking-wider font-semibold text-[var(--muted)]">
+                Total Watches
+              </span>
+              <p className="font-serif text-2xl font-bold text-[var(--ink)] mt-0.5">
+                {products.length}
+              </p>
+            </div>
+            <div className="h-8 w-px bg-[var(--sand)]" />
+            <div>
+              <span className="text-xs uppercase tracking-wider font-semibold text-[var(--muted)]">
+                Total Units in Stock
+              </span>
+              <p className="font-serif text-2xl font-bold text-[var(--gold)] mt-0.5">
+                {products.reduce((acc, p) => acc + p.stock, 0)}
+              </p>
+            </div>
+          </div>
+
+          {/* Search & Refresh */}
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="w-4 h-4 text-[var(--muted)] absolute left-3 top-2.5" />
+              <input
+                type="text"
+                value={productSearch}
+                onChange={(e) => setProductSearch(e.target.value)}
+                placeholder="Search watches, brand, category..."
+                className="w-full pl-9 pr-8 py-2 bg-stone-50 border border-[var(--sand)] rounded-lg text-xs text-[var(--ink)] placeholder:text-[var(--muted)]/60 focus:outline-none focus:ring-1 focus:ring-[var(--gold)]"
+              />
+              {productSearch && (
+                <button
+                  type="button"
+                  onClick={() => setProductSearch('')}
+                  className="absolute right-2.5 top-2.5 text-[var(--muted)] hover:text-[var(--ink)]"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => refetchProducts()}
+              disabled={isFetchingProducts}
+              title="Refresh products list"
+              className="p-2 border border-[var(--sand)] rounded-lg hover:bg-stone-50 text-[var(--muted)] hover:text-[var(--ink)] transition-colors cursor-pointer"
+            >
+              <RotateCw className={`w-4 h-4 ${isFetchingProducts ? 'animate-spin' : ''}`} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsCreateModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] font-semibold text-xs uppercase tracking-wider rounded-lg shadow-sm transition-all cursor-pointer shrink-0"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>New Watch</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Products Table */}
+      <div className="bg-white border border-[var(--sand)] rounded-xl shadow-sm overflow-hidden">
+        {isLoadingProducts ? (
+          <div className="p-16 text-center">
+            <div className="w-8 h-8 rounded-full border-2 border-[var(--gold)] border-t-transparent animate-spin mx-auto mb-3" />
+            <p className="text-xs text-[var(--muted)]">Loading watch catalog...</p>
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="p-16 text-center space-y-4">
+            <div className="w-12 h-12 rounded-full bg-[var(--sand)]/40 flex items-center justify-center text-[var(--muted)] mx-auto">
+              <Watch className="w-6 h-6 text-[var(--gold)]" />
+            </div>
+            <p className="font-serif text-xl text-[var(--ink)]">No watches found</p>
+            <p className="text-xs text-[var(--muted)] max-w-sm mx-auto">
+              {productSearch ? `No watches match "${productSearch}".` : 'No watches in inventory yet.'}
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsCreateModalOpen(true)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] text-xs uppercase tracking-wider font-semibold rounded-lg transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add First Watch</span>
+            </button>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="bg-[var(--sand)]/30 border-b border-[var(--sand)] text-xs uppercase tracking-wider text-[var(--muted)]">
+                  <th className="py-3.5 px-4 font-semibold">Watch</th>
+                  <th className="py-3.5 px-4 font-semibold">Category</th>
+                  <th className="py-3.5 px-4 font-semibold">Price</th>
+                  <th className="py-3.5 px-4 font-semibold">Stock</th>
+                  <th className="py-3.5 px-4 font-semibold">Status</th>
+                  <th className="py-3.5 px-4 font-semibold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--sand)]/60 text-xs text-[var(--ink)]">
+                {filteredProducts.map((product) => {
+                  const isOutOfStock = product.stock <= 0;
+                  const isLowStock = product.stock > 0 && product.stock <= 3;
+
+                  return (
+                    <tr key={product.id} className="hover:bg-stone-50/80 transition-colors">
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-12 h-12 rounded-lg bg-[var(--sand)]/30 overflow-hidden shrink-0 border border-[var(--sand)]">
+                            <Image
+                              src={product.imageUrl}
+                              alt={product.name}
+                              fill
+                              sizes="48px"
+                              className="object-cover"
+                            />
+                          </div>
+                          <div>
+                            <span className="font-medium text-sm text-[var(--ink)] block line-clamp-1">
+                              {product.name}
+                            </span>
+                            <span className="text-[11px] text-[var(--muted)]">
+                              {product.brand}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="py-3.5 px-4">
+                        <span className="capitalize px-2.5 py-1 rounded-full text-[11px] font-medium bg-[var(--sand)]/50 text-[var(--ink)] border border-[var(--sand)]">
+                          {product.category}
+                        </span>
+                      </td>
+
+                      <td className="py-3.5 px-4 font-serif text-sm font-semibold text-[var(--gold)]">
+                        {formatNaira(product.priceKobo)}
+                      </td>
+
+                      <td className="py-3.5 px-4">
+                        {isOutOfStock ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider bg-[var(--danger)]/15 text-[var(--danger)]">
+                            Out of Stock
+                          </span>
+                        ) : isLowStock ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider bg-[var(--warning)]/15 text-[var(--warning)]">
+                            {product.stock} Left (Low)
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase font-semibold tracking-wider bg-[var(--success)]/15 text-[var(--success)]">
+                            {product.stock} In Stock
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="py-3.5 px-4">
+                        {product.featured ? (
+                          <span className="inline-flex items-center gap-1 text-[11px] text-[var(--gold)] font-medium">
+                            <Sparkles className="w-3 h-3" />
+                            <span>Featured</span>
+                          </span>
+                        ) : (
+                          <span className="text-[11px] text-[var(--muted)]">Standard</span>
+                        )}
+                      </td>
+
+                      <td className="py-3.5 px-4 text-right">
+                        <Link
+                          href={`/shop/${product.slug}`}
+                          target="_blank"
+                          className="inline-flex items-center gap-1 text-xs text-[var(--gold)] hover:text-[var(--gold-deep)] font-medium transition-colors"
+                        >
+                          <span>View</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  )}
 
       {/* Slide-Over Order Detail Modal */}
       {activeOrder && (
@@ -487,6 +752,12 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
           </div>
         </div>
       )}
+
+      {/* Create Product Modal */}
+      <CreateProductModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
     </div>
   );
 }

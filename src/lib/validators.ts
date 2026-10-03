@@ -94,3 +94,43 @@ export const checkoutFormSchema = z
   });
 
 export type CheckoutFormData = z.infer<typeof checkoutFormSchema>;
+
+// ---------- PRODUCT CREATION ----------
+export const productCategorySchema = z.enum(['dress', 'sport', 'classic', 'smart'], {
+  message: 'Please select a valid category',
+});
+
+export const createProductSchema = z.object({
+  name: z.string().trim().min(2, { message: 'Watch name must be at least 2 characters' }).max(100),
+  brand: z.string().trim().min(1, { message: 'Brand name is required' }).max(50).default('Dave Store'),
+  description: z.string().trim().min(10, { message: 'Description must be at least 10 characters' }).max(2000),
+  priceKobo: z.number().int().positive({ message: 'Price must be greater than zero' }),
+  category: productCategorySchema,
+  stock: z.number().int().nonnegative({ message: 'Stock cannot be negative' }).default(1),
+  imageUrl: z.string().trim().url({ message: 'Must be a valid image URL (e.g. https://...)' }),
+  movement: z.string().trim().max(100).optional().or(z.literal('')),
+  caseSizeMm: z.number().int().positive().max(100).optional().nullable(),
+  strap: z.string().trim().max(100).optional().or(z.literal('')),
+  waterResistance: z.string().trim().max(100).optional().or(z.literal('')),
+  featured: z.boolean().default(false),
+  gallery: z.array(z.string().url()).optional().default([]),
+});
+
+export type CreateProductInput = z.infer<typeof createProductSchema>;
+
+export const createProductFormSchema = z.object({
+  name: z.string().trim().min(2, { message: 'Watch name must be at least 2 characters' }).max(100),
+  brand: z.string().trim().min(1, { message: 'Brand name is required' }).max(50),
+  description: z.string().trim().min(10, { message: 'Description must be at least 10 characters' }).max(2000),
+  priceNaira: z.number().positive({ message: 'Price in Naira must be greater than 0' }),
+  category: productCategorySchema,
+  stock: z.number().int().nonnegative({ message: 'Stock cannot be negative' }),
+  imageUrl: z.string().trim().url({ message: 'Must be a valid image URL (https://...)' }),
+  movement: z.string().trim().max(100).optional(),
+  caseSizeMm: z.number().int().positive().max(100).optional().nullable(),
+  strap: z.string().trim().max(100).optional(),
+  waterResistance: z.string().trim().max(100).optional(),
+  featured: z.boolean(),
+});
+
+export type CreateProductFormData = z.infer<typeof createProductFormSchema>;

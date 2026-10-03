@@ -46,7 +46,7 @@ export default function OpenGraphImage() {
             marginBottom: 20,
           }}
         >
-          Original Wristwatches · Lagos, Nigeria
+          Original Wristwatches · Main Market, Onitsha
         </div>
 
         {/* Brand wordmark */}

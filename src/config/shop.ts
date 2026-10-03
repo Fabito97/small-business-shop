@@ -1,4 +1,4 @@
-export const PAY_ON_DELIVERY_SUPPORTED_STATES = ['Lagos'] as const;
+export const PAY_ON_DELIVERY_SUPPORTED_STATES = ['Anambra', 'Lagos'] as const;
 export type PayOnDeliverySupportedState = (typeof PAY_ON_DELIVERY_SUPPORTED_STATES)[number];
 
 export function isPayOnDeliverySupported(state?: string | null): boolean {
@@ -22,7 +22,7 @@ export const SHOP = {
     {
       id: 'pay_on_delivery',
       label: 'Pay on Delivery',
-      description: 'Available in Lagos. Inspect your watch and pay cash or card to the rider.',
+      description: 'Available in Anambra and Lagos. Inspect your watch and pay cash or card to the rider.',
     },
     {
       id: 'bank_transfer',

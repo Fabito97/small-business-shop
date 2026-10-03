@@ -115,7 +115,7 @@ export function Footer() {
           </h5>
           <p className="text-xs text-[var(--muted)] leading-relaxed">
             Settle securely via Instant Online Card payment, Direct Bank Transfer into our verified account
-            at {SHOP.bankDetails.bankName}, or Pay on Delivery in Lagos.
+            at {SHOP.bankDetails.bankName}, or Pay on Delivery in Anambra & Lagos.
           </p>
           <div className="pt-2">
             <a

@@ -32,7 +32,8 @@ export const metadata: Metadata = {
   keywords: [
     'Dave Store',
     'wristwatches in Nigeria',
-    'buy watches Lagos',
+    'buy watches Onitsha',
+    'Main Market Onitsha watch shop',
     'original wristwatches Nigeria',
     'men watches Nigeria',
     'women watches Nigeria',

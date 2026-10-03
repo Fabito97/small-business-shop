@@ -231,7 +231,7 @@ export function OrderConfirmationTracker({
       {/* Dynamic Settlement Card */}
       {isConfirmed ? (
         /* Confirmed State: Green/Gold Verified Settlement Banner */
-        <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-6 sm:p-8 text-[var(--ivory)] shadow-md">
+        <div className="bg-[var(--ink)]/90 border border-emerald-500/30 rounded-xl p-6 sm:p-8 text-[var(--ivory)] shadow-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
               <div className="p-2.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
@@ -246,7 +246,7 @@ export function OrderConfirmationTracker({
             </div>
 
             <div className="flex items-center gap-2 self-start sm:self-auto">
-              <span className="text-[11px] font-mono uppercase tracking-wider px-3 py-1.5 rounded bg-emerald-900/60 border border-emerald-500/30 text-emerald-300">
+              <span className="text-[11px] font-mono uppercase tracking-wider px-3 py-1.5 rounded bg-[var(--gold)]/80 text-[var(--ink)]">
                 Receipt #{order.orderNumber}
               </span>
             </div>
@@ -377,9 +377,9 @@ export function OrderConfirmationTracker({
             Watches in This Order ({items.length})
           </h3>
 
-          <div className="divide-y divide-[var(--sand)] space-y-4">
+          <div className="space-y-3">
             {items.map((item) => (
-              <div key={item.id} className="pt-4 first:pt-0 flex items-center gap-4">
+              <div key={item.id} className="p-3 flex items-center gap-4 border border-[var(--sand)] rounded-lg bg-[var(--sand)]/5">
                 <div className="relative w-16 h-20 rounded bg-[var(--sand)]/40 overflow-hidden shrink-0">
                   {item.imageUrl ? (
                     <Image

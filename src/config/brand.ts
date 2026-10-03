@@ -13,7 +13,7 @@ export const BRAND = {
   whatsapp: '+234 800 000 0000',
   whatsappUrl: 'https://wa.me/2348000000000',
   phone: '+234 802 345 6789',
-  location: 'Ikeja, Lagos, Nigeria',
+  location: 'Main Market, Onitsha, Anambra State, Nigeria',
   socials: {
     instagram: 'https://instagram.com/davestoreng',
     twitter: 'https://x.com/davestoreng',

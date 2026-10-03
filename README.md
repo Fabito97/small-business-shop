@@ -127,11 +127,16 @@ All brand copy, contact details, social links, and banking details are centrally
   - Corporate bank details for wire transfers (Bank name, Account name, Account number, payment instructions).
   - `PAY_ON_DELIVERY_SUPPORTED_STATES`: Array of Nigerian states eligible for Pay on Delivery (defaults to `['Lagos']`). Easily add more states without touching database schemas or logic.
 
-### Editing Products & Stock
-In version 1.0, product records and inventory can be inspected and updated directly through:
-1. **Drizzle Studio:** Run `npx drizzle-kit studio` in your terminal to launch a visual database management dashboard in your browser.
-2. **Neon Console:** Use the Neon SQL Editor or Tables UI at [neon.tech](https://neon.tech).
-3. **Seed File:** Modify `src/server/db/seed.ts` and re-run `npm run db:seed`.
+### Adding and Managing Watches
+Administrators can create and inspect products directly from the web application:
+1. **Admin Console (`/admin`):** Navigate to the **Watch Inventory** tab and click **+ Add New Watch**.
+   - Input watch name, brand, category (`Classic`, `Dress`, `Sport`, `Smart`), price in Naira (₦), stock count, watch specifications (movement, case size, strap, water resistance), and image URL.
+   - Includes 4 one-click luxury watch image presets with live previews.
+   - Price in Naira is automatically converted into integer kobo and persisted into Neon.
+   - Newly added products automatically revalidate public storefront caches and appear immediately on `/shop` and `/`.
+2. **Drizzle Studio:** Run `npx drizzle-kit studio` in your terminal for direct visual database row inspection.
+3. **Neon Console:** Use the Neon SQL Editor or Tables UI at [neon.tech](https://neon.tech).
+4. **Seed File:** Modify `src/server/db/seed.ts` and re-run `npm run db:seed` if reseeding the initial catalogue.
 
 ### Making an Administrator
 Add any user's Google account email address to the `ADMIN_EMAILS` environment variable in `.env.local` or Vercel. Upon their next Google login, their user role will automatically be assigned as `admin`, granting access to `/admin` and operational order controls.
