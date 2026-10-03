@@ -158,7 +158,7 @@ export class OrderService {
         .values({
           orderNumber,
           userId,
-          status: 'pending',
+          status: input.paymentMethod === 'card' ? 'confirmed' : 'pending',
           paymentMethod: input.paymentMethod,
           subtotalKobo,
           shippingKobo,

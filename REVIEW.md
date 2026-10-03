@@ -311,3 +311,29 @@
 
 ### Decisions and assumptions
 - Enforced `import 'server-only'` across all service modules to guarantee that database logic, external API keys, and server infrastructure never leak into client bundles.
+
+## Order Confirmation Liveness & Flexible Payment Strategy
+
+### What was implemented
+- **Hybrid SSR + React Query Order Confirmation Tracker (`src/components/orders/OrderConfirmationTracker.tsx`)**:
+  - Implemented a hybrid architecture: the Server Component (`src/app/order-confirmation/[orderNumber]/page.tsx`) renders full HTML on initial request with zero loading skeleton waterfall, passing `initialOrder` and `initialItems` to the client tracker.
+  - Built smart tiered polling with TanStack React Query:
+    - **Burst Phase (0–60s):** High-frequency verification polling with gentle exponential backoff (4s → 7s → 12s) while awaiting incoming transfer credit.
+    - **Background Heartbeat (after 60s cutoff):** Drops to a relaxed 35-second heartbeat interval (plus window-focus refetches) to conserve mobile battery and server connections.
+    - **Terminal Stop:** Automatically ceases polling once the order reaches `confirmed`, `shipped`, `delivered`, or `cancelled`.
+    - **Interactive Control:** Embedded a manual "Check Status Now" button with loading spinner so customers can immediately verify after completing bank transfer.
+    - **Dynamic State Transition:** The moment payment clears, the bank wire instructions box dynamically transforms into an emerald "Payment Authorized & Verified" receipt banner with a celebration toast.
+- **Flexible Multi-Method Payment Model (Instant Card Simulation + Bank Wire + POD)**:
+  - Extended schema and validation (`src/server/db/schema.ts`, `src/lib/validators.ts`) to support `'card'` alongside `'bank_transfer'` and `'pay_on_delivery'`.
+  - In `OrderService`, orders placed with `paymentMethod: 'card'` are immediately initialized as `confirmed`, enabling seamless end-to-end automated testing and previewing of post-purchase states without admin intervention.
+  - Updated `src/components/checkout/CheckoutForm.tsx` to render all three payment options with dedicated badges, descriptions, and automatic fallback handling.
+  - Updated transactional email templates (`src/server/email/templates.ts`) to render a green verified payment notice when paid online via card.
+
+### Challenges
+- **React Compiler Purity Constraint on Timing References**: Initializing `useRef<number>(Date.now())` during the render phase tripped the React Compiler's idempotency rule (`react-hooks/purity`). Resolved by initializing `startTimeRef` to `null` and populating the timestamp inside a `useEffect` on mount.
+
+### Improvements
+- When connecting real payment providers like Paystack or Stripe, wire their webhook endpoint (`POST /api/webhooks/paystack`) into `OrderService` to verify the HMAC signature and flip orders to `confirmed`—the frontend polling tracker and confirmation UI will seamlessly respond without any changes.
+
+### Decisions and assumptions
+- Retained database-backed opaque session tokens over JWTs for the web client to maintain strict `HttpOnly` XSS protection and 0ms revocation without needing a Redis cluster or client-side refresh token interceptor machinery, while keeping the architecture prepared for mobile Bearer token integration.

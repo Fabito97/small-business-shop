@@ -16,6 +16,7 @@ import {
   Building2,
   Banknote,
   CheckCircle2,
+  CreditCard,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -59,7 +60,7 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
       city: '',
       state: 'Lagos',
       notes: '',
-      paymentMethod: 'pay_on_delivery',
+      paymentMethod: 'card',
     },
   });
 
@@ -67,10 +68,10 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
   const selectedPaymentMethod = watch('paymentMethod');
   const podSupported = isPayOnDeliverySupported(selectedState);
 
-  // If user selects a state where POD is not supported, automatically toggle to bank transfer
+  // If user selects a state where POD is not supported and POD was active, fallback to card
   useEffect(() => {
     if (!podSupported && selectedPaymentMethod === 'pay_on_delivery') {
-      setValue('paymentMethod', 'bank_transfer');
+      setValue('paymentMethod', 'card');
     }
   }, [selectedState, podSupported, selectedPaymentMethod, setValue]);
 
@@ -328,7 +329,67 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
             </div>
 
             <div className="space-y-4">
-              {/* Option 1: Pay on Delivery */}
+              {/* Option 1: Instant Card / Online Payment */}
+              <label
+                className={`relative flex items-start gap-4 p-5 rounded-lg border transition-all cursor-pointer ${
+                  selectedPaymentMethod === 'card'
+                    ? 'bg-white border-[var(--gold)] shadow-sm'
+                    : 'bg-white border-[var(--sand)] hover:border-[var(--muted)]'
+                }`}
+              >
+                <input
+                  type="radio"
+                  value="card"
+                  {...register('paymentMethod')}
+                  className="mt-1 accent-[var(--gold)]"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="w-5 h-5 text-[var(--gold)]" />
+                    <span className="font-medium text-sm text-[var(--ink)]">
+                      Instant Card / Gateway (Test Mode)
+                    </span>
+                    <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded bg-[var(--gold)]/10 text-[var(--gold-deep)] border border-[var(--gold)]/20">
+                      Auto-Confirm
+                    </span>
+                  </div>
+                  <p className="text-xs text-[var(--muted)] mt-1.5 leading-relaxed">
+                    Instant automated settlement (Mastercard, Visa, Verve). Your timepiece requisition is immediately verified, receipted, and prioritized for transit.
+                  </p>
+                </div>
+              </label>
+
+              {/* Option 2: Direct Bank Transfer */}
+              <label
+                className={`relative flex items-start gap-4 p-5 rounded-lg border transition-all cursor-pointer ${
+                  selectedPaymentMethod === 'bank_transfer'
+                    ? 'bg-white border-[var(--gold)] shadow-sm'
+                    : 'bg-white border-[var(--sand)] hover:border-[var(--muted)]'
+                }`}
+              >
+                <input
+                  type="radio"
+                  value="bank_transfer"
+                  {...register('paymentMethod')}
+                  className="mt-1 accent-[var(--gold)]"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <Building2 className="w-5 h-5 text-[var(--gold)]" />
+                    <span className="font-medium text-sm text-[var(--ink)]">
+                      Direct Corporate Bank Wire
+                    </span>
+                    <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded bg-[var(--sand)] text-[var(--ink)]">
+                      Manual Verification
+                    </span>
+                  </div>
+                  <p className="text-xs text-[var(--muted)] mt-1.5 leading-relaxed">
+                    Wire directly to {SHOP.bankDetails.bankName}. Dedicated bank account coordinates and order reference will be presented on your receipt for manual transfer.
+                  </p>
+                </div>
+              </label>
+
+              {/* Option 3: Pay on Delivery */}
               <label
                 className={`relative flex items-start gap-4 p-5 rounded-lg border transition-all cursor-pointer ${
                   !podSupported
@@ -360,39 +421,9 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
                   </p>
                   {!podSupported && (
                     <p className="text-xs text-[var(--warning)] mt-2 font-medium">
-                      Pay on Delivery is exclusively available within {SHOP.payOnDeliveryStates.join(', ')}. For {selectedState}, kindly select Direct Bank Transfer.
+                      Pay on Delivery is exclusively available within {SHOP.payOnDeliveryStates.join(', ')}. For {selectedState}, kindly select Card or Direct Bank Transfer.
                     </p>
                   )}
-                </div>
-              </label>
-
-              {/* Option 2: Direct Bank Transfer */}
-              <label
-                className={`relative flex items-start gap-4 p-5 rounded-lg border transition-all cursor-pointer ${
-                  selectedPaymentMethod === 'bank_transfer'
-                    ? 'bg-white border-[var(--gold)] shadow-sm'
-                    : 'bg-white border-[var(--sand)] hover:border-[var(--muted)]'
-                }`}
-              >
-                <input
-                  type="radio"
-                  value="bank_transfer"
-                  {...register('paymentMethod')}
-                  className="mt-1 accent-[var(--gold)]"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <Building2 className="w-5 h-5 text-[var(--gold)]" />
-                    <span className="font-medium text-sm text-[var(--ink)]">
-                      Direct Corporate Bank Wire
-                    </span>
-                    <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded bg-[var(--sand)] text-[var(--ink)]">
-                      Nationwide
-                    </span>
-                  </div>
-                  <p className="text-xs text-[var(--muted)] mt-1.5 leading-relaxed">
-                    Wire directly to {SHOP.bankDetails.bankName}. Dedicated bank account coordinates and order reference will be presented on your receipt.
-                  </p>
                 </div>
               </label>
             </div>

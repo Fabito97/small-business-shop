@@ -63,8 +63,9 @@ export function buildOrderConfirmationEmail({ order, items }: OrderConfirmationE
     })
     .join('');
 
-  const bankTransferHtml = isBankTransfer
-    ? `
+  let paymentNoticeHtml = '';
+  if (isBankTransfer) {
+    paymentNoticeHtml = `
       <div style="margin-top: 24px; padding: 20px; background-color: #16161A; border: 1px solid #332B20; border-radius: 6px;">
         <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #B8956A; font-weight: 700; margin-bottom: 8px;">
           Direct Bank Wire Instructions
@@ -82,8 +83,20 @@ export function buildOrderConfirmationEmail({ order, items }: OrderConfirmationE
           ${escapeHtml(SHOP.bankDetails.instructions)}
         </div>
       </div>
-    `
-    : `
+    `;
+  } else if (order.paymentMethod === 'card') {
+    paymentNoticeHtml = `
+      <div style="margin-top: 24px; padding: 16px; background-color: #121814; border: 1px solid #1E382B; border-radius: 6px;">
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #34D399; font-weight: 700; margin-bottom: 6px;">
+          Payment Verified Online
+        </div>
+        <div style="font-size: 13px; color: #D1D1D6; line-height: 1.5;">
+          Full settlement of <strong>${formatNaira(order.totalKobo)}</strong> has been verified and authorized. Your order is confirmed and prioritized for transit.
+        </div>
+      </div>
+    `;
+  } else {
+    paymentNoticeHtml = `
       <div style="margin-top: 24px; padding: 16px; background-color: #16161A; border: 1px solid #2A2A30; border-radius: 6px;">
         <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #B8956A; font-weight: 700; margin-bottom: 6px;">
           Pay on Delivery
@@ -93,6 +106,7 @@ export function buildOrderConfirmationEmail({ order, items }: OrderConfirmationE
         </div>
       </div>
     `;
+  }
 
   const html = `
 <!DOCTYPE html>
@@ -186,7 +200,7 @@ export function buildOrderConfirmationEmail({ order, items }: OrderConfirmationE
           <!-- Payment Instructions -->
           <tr>
             <td style="padding: 0 32px;">
-              ${bankTransferHtml}
+              ${paymentNoticeHtml}
             </td>
           </tr>
 

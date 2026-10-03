@@ -43,7 +43,7 @@ export const shippingAddressSchema = z.object({
     .or(z.literal('')),
 });
 
-export const paymentMethodSchema = z.enum(['pay_on_delivery', 'bank_transfer'], {
+export const paymentMethodSchema = z.enum(['pay_on_delivery', 'bank_transfer', 'card'], {
   message: 'Please select a payment method',
 });
 
@@ -61,7 +61,7 @@ export const createOrderSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['paymentMethod'],
-        message: `Pay on Delivery is only available for delivery to ${SHOP.payOnDeliveryStates.join(', ')}. Please choose Direct Bank Transfer or change delivery state.`,
+        message: `Pay on Delivery is only available for delivery to ${SHOP.payOnDeliveryStates.join(', ')}. Please choose Card or Bank Transfer, or change delivery state.`,
       });
     }
   });

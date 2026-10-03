@@ -57,7 +57,7 @@ export const orders = pgTable('orders', {
   userId: uuid('user_id').notNull().references(() => users.id),
   status: text('status', { enum: ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'] })
     .notNull().default('pending'),
-  paymentMethod: text('payment_method', { enum: ['pay_on_delivery', 'bank_transfer'] }).notNull(),
+  paymentMethod: text('payment_method', { enum: ['pay_on_delivery', 'bank_transfer', 'card'] }).notNull(),
   subtotalKobo: bigint('subtotal_kobo', { mode: 'number' }).notNull(),
   shippingKobo: bigint('shipping_kobo', { mode: 'number' }).notNull(),
   totalKobo: bigint('total_kobo', { mode: 'number' }).notNull(),
