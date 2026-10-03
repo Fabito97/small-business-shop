@@ -11,7 +11,7 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 
 export const metadata: Metadata = {
   title: `My Orders | ${BRAND.name}`,
-  description: 'Review your past timepiece acquisitions, invoices, and dispatch statuses.',
+  description: 'Review your past watch orders, receipts, and delivery statuses.',
 };
 
 export const dynamic = 'force-dynamic';
@@ -27,13 +27,13 @@ export default async function MyOrdersPage() {
         <div className="border-b border-[var(--sand)] pb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
             <span className="text-xs uppercase tracking-[0.25em] font-semibold text-[var(--gold)]">
-              Client Portfolio
+              My Account
             </span>
             <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] mt-1 font-normal">
-              My Acquisitions & Orders
+              My Orders
             </h1>
             <p className="text-xs text-[var(--muted)] mt-1">
-              Registered client: <span className="font-medium text-[var(--ink)]">{user.name || user.email}</span>
+              Account: <span className="font-medium text-[var(--ink)]">{user.name || user.email}</span>
             </p>
           </div>
 
@@ -54,14 +54,14 @@ export default async function MyOrdersPage() {
             </div>
             <h2 className="font-serif text-2xl text-[var(--ink)]">No Active Orders Yet</h2>
             <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
-              When you acquire a timepiece, your provenance receipt, courier tracking, and fulfillment updates will appear here.
+              When you order a watch, your order receipt, delivery tracking, and updates will appear here.
             </p>
             <div className="pt-2">
               <Link
                 href="/shop"
                 className="inline-flex items-center gap-2 bg-[var(--ink)] hover:bg-[var(--gold-deep)] text-[var(--ivory)] px-6 py-3.5 rounded-md text-xs uppercase tracking-wider font-semibold transition-colors"
               >
-                <span>Browse Horological Collection</span>
+                <span>Browse Watch Collection</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>

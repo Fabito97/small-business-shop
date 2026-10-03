@@ -15,11 +15,11 @@ export default function NotFound() {
         </span>
 
         <h1 className="font-serif text-3xl sm:text-5xl font-light text-[var(--ivory)]">
-          Caliber Not Found
+          Watch Not Found
         </h1>
 
         <p className="text-sm text-[var(--muted)] leading-relaxed max-w-md mx-auto">
-          The horological record, timepiece, or requisition page you are seeking does not exist or has been relocated within the {BRAND.name} atelier.
+          The watch or page you are looking for does not exist, may have sold out, or was moved within {BRAND.name}.
         </p>
 
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -27,7 +27,7 @@ export default function NotFound() {
             href="/shop"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] text-xs uppercase tracking-[0.2em] font-semibold rounded-md transition-colors shadow-sm"
           >
-            <span>Browse Timepieces</span>
+            <span>Browse Watches</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
@@ -35,7 +35,7 @@ export default function NotFound() {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[var(--charcoal)] border border-[var(--sand)]/20 hover:border-[var(--gold)]/40 text-[var(--sand)] text-xs uppercase tracking-[0.2em] font-medium rounded-md transition-colors"
           >
             <Home className="w-4 h-4" />
-            <span>Atelier Home</span>
+            <span>Back to Home</span>
           </Link>
         </div>
       </div>

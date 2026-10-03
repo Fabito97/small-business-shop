@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
 
     console.error('[API Orders POST] Unexpected error:', error);
     return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: 'Failed to process timepiece order' } },
+      { error: { code: 'INTERNAL_ERROR', message: 'Failed to process watch order' } },
       { status: 500 }
     );
   }

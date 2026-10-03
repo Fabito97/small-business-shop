@@ -37,6 +37,7 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
   const mounted = useIsMounted();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isOrderComplete, setIsOrderComplete] = useState(false);
 
   const items = useCartStore((s) => s.items);
   const clearCart = useCartStore((s) => s.clear);
@@ -115,22 +116,23 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
       if (!res.ok) {
         const errorMsg =
           responseData?.error?.message ||
-          'Failed to record your requisition. Please review your details and try again.';
+          'Failed to place your order. Please review your details and try again.';
         setServerError(errorMsg);
         toast.error(errorMsg);
+        setIsSubmitting(false);
         return;
       }
 
-      // Order created successfully
-      toast.success('Your timepiece order has been placed!');
+      // Order created successfully - set completion state first to prevent empty cart flash
+      setIsOrderComplete(true);
+      toast.success('Your watch order has been placed successfully!');
       clearCart();
       router.push(`/order-confirmation/${responseData.orderNumber}`);
     } catch (err: unknown) {
       console.error('Checkout error:', err);
-      const msg = 'A network error occurred while securing your order. Please try again.';
+      const msg = 'A network error occurred while placing your order. Please try again.';
       setServerError(msg);
       toast.error(msg);
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -143,21 +145,31 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
     );
   }
 
+  if (isOrderComplete) {
+    return (
+      <div className="py-24 text-center max-w-md mx-auto px-4 space-y-4">
+        <div className="w-12 h-12 rounded-full border-2 border-[var(--gold)] border-t-transparent animate-spin mx-auto" />
+        <h2 className="font-serif text-2xl text-[var(--ink)]">Order Placed!</h2>
+        <p className="text-sm text-[var(--muted)]">Opening your order confirmation receipt...</p>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="py-24 text-center max-w-md mx-auto px-4">
         <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[var(--sand)] flex items-center justify-center text-[var(--gold)]">
           <Clock className="w-8 h-8" />
         </div>
-        <h2 className="font-serif text-3xl text-[var(--ink)] mb-3">Your Bag is Empty</h2>
+        <h2 className="font-serif text-3xl text-[var(--ink)] mb-3">Your Cart is Empty</h2>
         <p className="text-[var(--muted)] text-sm mb-8 leading-relaxed">
-          Please explore our watch collection to select your timepiece before proceeding with checkout.
+          Please explore our watch collection to select a watch before proceeding with checkout.
         </p>
         <Link
           href="/shop"
           className="inline-flex items-center gap-2 px-8 py-3.5 bg-[var(--ink)] text-[var(--ivory)] rounded-md font-medium text-sm hover:bg-[var(--gold-deep)] transition-colors"
         >
-          Explore Collection <ArrowRight className="w-4 h-4" />
+          Explore Watches <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     );
@@ -185,7 +197,7 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
                 Step 01
               </span>
               <h2 className="font-serif text-2xl text-[var(--ink)] mt-1">
-                Horological Transit Destination
+                Delivery Address
               </h2>
             </div>
 
@@ -224,7 +236,7 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
                   <Lock className="w-4 h-4 text-[var(--muted)] absolute right-3.5 top-3.5" />
                 </div>
                 <p className="text-[11px] text-[var(--muted)] mt-1.5">
-                  Verified Google account email for order provenance and notifications.
+                  Verified Google account email for order confirmation and delivery updates.
                 </p>
               </div>
 
@@ -354,7 +366,7 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
                     </span>
                   </div>
                   <p className="text-xs text-[var(--muted)] mt-1.5 leading-relaxed">
-                    Instant automated settlement (Mastercard, Visa, Verve). Your timepiece requisition is immediately verified, receipted, and prioritized for transit.
+                    Instant automated settlement (Mastercard, Visa, Verve). Your watch order is immediately verified, receipted, and prioritized for delivery.
                   </p>
                 </div>
               </label>
@@ -417,7 +429,7 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
                     )}
                   </div>
                   <p className="text-xs text-[var(--muted)] mt-1.5 leading-relaxed">
-                    Verify the authenticity and packaging of your timepiece first. Settle securely via cash or POS card upon delivery.
+                    Inspect your watch first. Settle securely via cash or POS card upon delivery.
                   </p>
                   {!podSupported && (
                     <p className="text-xs text-[var(--warning)] mt-2 font-medium">
@@ -437,9 +449,9 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
         <div className="lg:col-span-5">
           <div className="sticky top-28 bg-white border border-[var(--sand)] rounded-xl p-6 sm:p-8 space-y-6 shadow-sm">
             <div className="border-b border-[var(--sand)] pb-4 flex items-center justify-between">
-              <h3 className="font-serif text-xl text-[var(--ink)]">Requisition Summary</h3>
+              <h3 className="font-serif text-xl text-[var(--ink)]">Order Summary</h3>
               <span className="text-xs text-[var(--muted)] font-medium">
-                {items.length} {items.length === 1 ? 'Piece' : 'Pieces'}
+                {items.length} {items.length === 1 ? 'Watch' : 'Watches'}
               </span>
             </div>
 
@@ -478,13 +490,13 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
                 <span className="text-[var(--ink)] font-medium">{formatNaira(subtotal)}</span>
               </div>
               <div className="flex justify-between text-[var(--muted)]">
-                <span>Insured Courier Transit</span>
+                <span>Courier Delivery Fee</span>
                 <span
                   className={
                     shippingFee === 0 ? 'text-[var(--success)] font-medium' : 'text-[var(--ink)]'
                   }
                 >
-                  {shippingFee === 0 ? 'Complimentary' : formatNaira(shippingFee)}
+                  {shippingFee === 0 ? 'Free Delivery' : formatNaira(shippingFee)}
                 </span>
               </div>
 
@@ -505,7 +517,7 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
               {isSubmitting ? (
                 <>
                   <div className="w-4 h-4 rounded-full border-2 border-[var(--ivory)] border-t-transparent animate-spin" />
-                  <span>Securing Order & Inventory...</span>
+                  <span>Processing Your Order...</span>
                 </>
               ) : (
                 <>
@@ -519,15 +531,15 @@ export function CheckoutForm({ user }: CheckoutFormProps) {
             <div className="pt-4 border-t border-[var(--sand)] space-y-3">
               <div className="flex items-center gap-3 text-xs text-[var(--muted)]">
                 <ShieldCheck className="w-4 h-4 text-[var(--gold)] shrink-0" />
-                <span>100% Authenticity Verified & 12-Month Mechanical Warranty</span>
+                <span>100% Original Watches & 12-Month Warranty</span>
               </div>
               <div className="flex items-center gap-3 text-xs text-[var(--muted)]">
                 <Truck className="w-4 h-4 text-[var(--gold)] shrink-0" />
-                <span>Insured, armored transit across all 36 Nigerian States</span>
+                <span>Safe delivery across all 36 Nigerian States</span>
               </div>
               <div className="flex items-center gap-3 text-xs text-[var(--muted)]">
                 <CheckCircle2 className="w-4 h-4 text-[var(--gold)] shrink-0" />
-                <span>Dedicated horologist support via {BRAND.whatsapp}</span>
+                <span>Quick WhatsApp support via {BRAND.whatsapp}</span>
               </div>
             </div>
           </div>

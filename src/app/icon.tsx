@@ -23,8 +23,8 @@ export default function Icon() {
           letterSpacing: 1,
         }}
       >
-        <span style={{ color: '#B8956A' }}>M</span>
-        <span style={{ color: '#FAF7F2' }}>T</span>
+        <span style={{ color: '#B8956A' }}>D</span>
+        <span style={{ color: '#FAF7F2' }}>S</span>
       </div>
     ),
     {

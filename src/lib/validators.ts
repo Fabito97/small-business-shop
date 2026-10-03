@@ -52,7 +52,7 @@ export const createOrderSchema = z
     items: z
       .array(orderItemSchema)
       .min(1, { message: 'Cart cannot be empty' })
-      .max(20, { message: 'Cannot checkout more than 20 distinct timepieces at once' }),
+      .max(20, { message: 'Cannot checkout more than 20 distinct watches at once' }),
     shipping: shippingAddressSchema,
     paymentMethod: paymentMethodSchema,
   })

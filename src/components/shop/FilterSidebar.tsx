@@ -75,7 +75,7 @@ export function FilterSidebar({
       {/* Category Filter */}
       <div className="space-y-3">
         <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--ivory)] font-medium">
-          Horology Categories
+          Watch Categories
         </h4>
         <div className="space-y-1">
           <button
@@ -141,7 +141,7 @@ export function FilterSidebar({
       <div className="pt-4 border-t border-[var(--sand)]/10">
         <label className="flex items-center justify-between cursor-pointer group">
           <span className="text-xs uppercase tracking-wider text-[var(--sand)]/80 group-hover:text-[var(--gold)] transition-colors">
-            Vault Ready (In Stock)
+            In Stock Only
           </span>
           <input
             type="checkbox"
@@ -155,7 +155,7 @@ export function FilterSidebar({
       {/* Value statement note */}
       <div className="p-4 rounded-xl bg-[var(--ink)] border border-[var(--gold)]/10 text-[11px] text-[var(--muted)] leading-relaxed">
         <p>
-          Complimentary insured shipping applies automatically to all acquisitions over{' '}
+          Free safe delivery applies automatically to all orders over{' '}
           <span className="text-[var(--gold)]">{formatNaira(SHOP.freeShippingThresholdKobo)}</span>.
         </p>
       </div>

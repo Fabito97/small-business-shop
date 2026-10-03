@@ -337,3 +337,30 @@
 
 ### Decisions and assumptions
 - Retained database-backed opaque session tokens over JWTs for the web client to maintain strict `HttpOnly` XSS protection and 0ms revocation without needing a Redis cluster or client-side refresh token interceptor machinery, while keeping the architecture prepared for mobile Bearer token integration.
+
+## Brand Localization & Nigerian Audience Adaptations ("Dave Store")
+
+### What was implemented
+- **Central Brand & Identity Update (`src/config/brand.ts`, `src/config/shop.ts`)**:
+  - Rebranded the store name from placeholder "Meridian Time" to **"Dave Store"**.
+  - Updated store tagline to "Original watches for everyday confidence" and company statement to reflect authentic, high-quality wristwatches accessible to Nigerian watch lovers.
+  - Updated support email (`support@davestore.ng`), direct customer care line (`+234 802 345 6789`), showroom location (`Ikeja, Lagos, Nigeria`), and official bank transfer beneficiary name to **Dave Store**.
+  - Replaced high-horology European tropes with simple, reassuring Nigerian trust guarantees: *100% Original Watches*, *1-Year Warranty*, *Fast Nationwide Delivery*, and *Quick WhatsApp Support*.
+- **Language Normalization Across Storefront**:
+  - Audited all user-facing interfaces to eliminate foreign, exclusionary terminology (`concierge`, `requisition`, `vault`, `atelier`, `acquisitions`, `caliber`, `maison`, `heritage`, `horology`, etc.) in favor of clean, direct retail language (`WhatsApp Support`, `Order`, `In Stock`, `Watch Collection`, `My Orders`, `Similar Watches`, etc.).
+  - Replaced dead and foreign Header links (`Maison`, `Heritage`) with functional, localized links (`Collection` -> `/shop`, `Categories` -> `/#categories`, `Why Us` -> `/#why-us`).
+  - Replaced "Atelier Note" with "About This Watch", "Acquire Timepiece" with "Add to Cart", and "Vault Out of Stock" with "Out of Stock".
+  - Updated checkout and order confirmation wording so status messages and notifications speak directly and clearly to the customer.
+- **Transactional Email & Service Message Localization (`src/server/email/templates.ts`, `src/server/services/order.service.ts`)**:
+  - Simplified order confirmation email templates, subject lines, and payment instructions.
+  - Replaced cryptic inventory errors ("Insufficient timepieces in vault") with clear retail feedback ("Only X item(s) left in stock").
+- **Dynamic SEO & Visual Branding Assets (`src/app/layout.tsx`, `src/app/icon.tsx`, `src/app/opengraph-image.tsx`)**:
+  - Updated root metadata keywords to target authentic Nigerian watch search terms (`Dave Store`, `buy watches Lagos`, `original wristwatches Nigeria`, etc.).
+  - Updated dynamic favicon monogram to `DS` (Dave Store) and OpenGraph card subtitle to "Original Wristwatches · Lagos, Nigeria".
+
+### Challenges
+- Ensuring the brand tone remains clean, premium, and trustworthy without feeling overly stiff or using foreign horological jargon that doesn't resonate with everyday Nigerian buyers.
+- **Empty Cart Flash on Order Placement:** Calling `clearCart()` synchronously before `router.push()` cleared the Zustand store immediately, causing the subscribed `CheckoutForm` to flash its "Your Cart is Empty" fallback view while the router was completing navigation to `/order-confirmation/[orderNumber]`. Resolved by adding an `isOrderComplete` state guard that holds an elegant transition loader until the confirmation route mounts.
+
+### Decisions and assumptions
+- Preserved existing product database identifiers and cart persistence keys (`meridian_cart_v1`) to prevent cache or hydration invalidation for active sessions while completely updating all customer-facing copy.

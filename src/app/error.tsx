@@ -27,11 +27,11 @@ export default function ErrorPage({
         </span>
 
         <h1 className="font-serif text-3xl sm:text-4xl font-light text-[var(--ivory)]">
-          Chronometer Interruption
+          Something Went Wrong
         </h1>
 
         <p className="text-sm text-[var(--muted)] leading-relaxed max-w-sm mx-auto">
-          An unforeseen variance occurred while rendering your horological request. Our artisans have been alerted.
+          An unexpected issue occurred while loading this page. Please try again or return to the home page.
         </p>
 
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -41,14 +41,14 @@ export default function ErrorPage({
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] text-xs uppercase tracking-[0.2em] font-semibold rounded-md transition-colors shadow-sm cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Recalibrate (Retry)</span>
+            <span>Try Again</span>
           </button>
           <Link
             href="/"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[var(--charcoal)] border border-[var(--sand)]/20 hover:border-[var(--gold)]/40 text-[var(--sand)] text-xs uppercase tracking-[0.2em] font-medium rounded-md transition-colors"
           >
             <Home className="w-4 h-4" />
-            <span>Atelier Home</span>
+            <span>Back to Home</span>
           </Link>
         </div>
       </div>

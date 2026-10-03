@@ -56,17 +56,17 @@ export default function CartPage() {
           <ShoppingBag className="w-8 h-8" />
         </div>
         <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] font-light">
-          Your Vault Is Currently Empty
+          Your Cart is Empty
         </h1>
         <p className="text-sm text-[var(--muted)] max-w-md mx-auto mt-3 leading-relaxed">
-          You have not selected any timepieces for your acquisition bag. Explore our collection of certified chronometers and bespoke complications.
+          You have not added any watches to your cart yet. Explore our collection of authentic watches to find your next watch.
         </p>
         <div className="pt-8">
           <Link
             href="/shop"
             className="inline-flex items-center gap-3 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] font-semibold px-8 py-4 rounded-lg text-xs uppercase tracking-[0.2em] transition-all shadow-lg"
           >
-            <span>Explore Watch Collection</span>
+            <span>Explore Watches</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -80,10 +80,10 @@ export default function CartPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[var(--sand)] pb-6">
         <div>
           <span className="text-xs uppercase tracking-[0.25em] text-[var(--gold)] font-medium">
-            Client Selections
+            Shopping Cart
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] font-light mt-1">
-            Acquisition Bag ({itemCount} {itemCount === 1 ? 'Timepiece' : 'Timepieces'})
+            Shopping Bag ({itemCount} {itemCount === 1 ? 'Watch' : 'Watches'})
           </h1>
         </div>
 
@@ -160,7 +160,7 @@ export default function CartPage() {
                       Unit Value: {formatNaira(item.priceKobo)}
                     </p>
                     <p className="text-xs text-[var(--sand)]/60">
-                      Vault Stock: {item.stock} available
+                      In Stock: {item.stock} available
                     </p>
                   </div>
                 </div>
@@ -230,22 +230,22 @@ export default function CartPage() {
         {/* Order Summary Sidebar */}
         <div className="lg:col-span-4 bg-[var(--charcoal)] border border-[var(--gold)]/20 rounded-2xl p-6 space-y-6 sticky top-28 shadow-xl">
           <h2 className="font-serif text-xl text-[var(--ivory)] border-b border-[var(--sand)]/10 pb-4 font-light">
-            Acquisition Summary
+            Order Summary
           </h2>
 
           <div className="space-y-3 text-xs">
             <div className="flex items-center justify-between text-[var(--sand)]/80">
-              <span>Timepieces Subtotal</span>
+              <span>Watches Subtotal</span>
               <span className="font-serif text-sm text-[var(--ivory)]">
                 {formatNaira(subtotalKobo)}
               </span>
             </div>
 
             <div className="flex items-center justify-between text-[var(--sand)]/80">
-              <span>Nationwide Insured Delivery</span>
+              <span>Nationwide Delivery</span>
               {shippingFeeKobo === 0 ? (
                 <span className="text-[var(--gold)] font-medium uppercase tracking-wider text-[11px]">
-                  Free (Complimentary)
+                  Free Delivery
                 </span>
               ) : (
                 <span className="font-serif text-sm text-[var(--ivory)]">
@@ -256,7 +256,7 @@ export default function CartPage() {
 
             <div className="pt-3 border-t border-[var(--sand)]/10 flex items-center justify-between">
               <span className="text-sm font-medium text-[var(--ivory)] uppercase tracking-wider">
-                Total Value
+                Total
               </span>
               <span className="font-serif text-2xl text-[var(--gold)] font-medium">
                 {formatNaira(totalKobo)}
@@ -278,11 +278,11 @@ export default function CartPage() {
           <div className="pt-4 border-t border-[var(--sand)]/10 space-y-3 text-[11px] text-[var(--muted)]">
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="w-4 h-4 text-[var(--gold)] shrink-0" />
-              <span>Certified provenance & 12-month manufacturer movement warranty.</span>
+              <span>100% original watch with 12-month warranty included.</span>
             </div>
             <div className="flex items-start gap-2.5">
               <Truck className="w-4 h-4 text-[var(--gold)] shrink-0" />
-              <span>Full insurance coverage during transit across all 36 states.</span>
+              <span>Safe delivery across all 36 Nigerian states.</span>
             </div>
           </div>
         </div>

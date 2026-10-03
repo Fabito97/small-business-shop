@@ -46,7 +46,7 @@ export default function OpenGraphImage() {
             marginBottom: 20,
           }}
         >
-          Haute Horlogerie · Victoria Island, Lagos
+          Original Wristwatches · Lagos, Nigeria
         </div>
 
         {/* Brand wordmark */}

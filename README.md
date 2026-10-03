@@ -1,8 +1,8 @@
-# Meridian Time — Luxury Watch E-Commerce
+# Dave Store — Quality Watch E-Commerce
 
-A polished, high-performance storefront and checkout platform designed for a luxury watch business in Nigeria.
+A polished, high-performance storefront and checkout platform designed for an original watch retail business in Nigeria.
 
-- **Brand:** Meridian Time ("Wear the hour.")
+- **Brand:** Dave Store ("Original watches for everyday confidence")
 - **Currency:** Nigerian Naira (NGN ₦), backed strictly by integer kobo calculations.
 - **Task:** HNG15 Lesson 2 individual project (ready to hand off to the store owner).
 
@@ -42,16 +42,16 @@ A polished, high-performance storefront and checkout platform designed for a lux
    - Dynamic Pay on Delivery rule: enabled only for supported delivery states (configured in `src/config/shop.ts`, defaults to Lagos); smoothly switches to Direct Bank Transfer for other states with clear feedback.
    - Single ACID database transaction (`createOrder`): re-prices from DB, atomically checks and decrements inventory, rolls back completely on out-of-stock.
    - Non-blocking Mailgun confirmation email dispatch.
-5. **Customer Requisition Receipt & Hub (`/order-confirmation/[orderNumber]`, `/orders`)**:
-   - Full order confirmation receipt showing timepieces, financial breakdown, destination, and bank wire transfer instructions with account coordinates.
+5. **Customer Order Receipt & Hub (`/order-confirmation/[orderNumber]`, `/orders`)**:
+   - Full order confirmation receipt showing items, financial breakdown, destination, and bank transfer instructions with account details.
    - Multi-tenant security: unauthorized users receive 404 when attempting to access another user's order.
    - Responsive client order history dashboard.
 6. **Administrative Operations Console (`/admin`)**:
    - Protected by server-side role check: non-admin users receive a 404 to avoid disclosing internal administrative routes.
-   - Real-time stat cards: Total Revenue (excluding cancelled orders), Total Orders, and Pending Requisitions.
+   - Real-time stat cards: Total Revenue (excluding cancelled orders), Total Orders, and Pending Orders.
    - Searchable and filterable orders table with interactive status selector (`pending`, `confirmed`, `shipped`, `delivered`, `cancelled`).
-   - Cancelling an order automatically restocks the timepieces back into active inventory in a transaction.
-   - Inspection slide-over drawer with detailed order telemetry and public receipt link.
+   - Cancelling an order automatically restocks items back into active inventory in a transaction.
+   - Inspection slide-over drawer with detailed order details and public receipt link.
 
 ---
 
@@ -75,7 +75,7 @@ Fill in the required values:
 - `ADMIN_EMAILS`: Comma-separated list of admin email addresses (grants `admin` role upon login)
 - `MAILGUN_API_KEY`: Mailgun API key
 - `MAILGUN_DOMAIN`: Mailgun sending domain
-- `MAILGUN_FROM`: Sender header (e.g. `"Meridian Time <orders@yourdomain.com>"`)
+- `MAILGUN_FROM`: Sender header (e.g. `"Dave Store <orders@yourdomain.com>"`)
 - `MAILGUN_BASE_URL`: `https://api.mailgun.net` (US) or `https://api.eu.mailgun.net` (EU)
 - `OWNER_NOTIFY_EMAIL`: (Optional) Email address to receive notifications when new orders are placed
 

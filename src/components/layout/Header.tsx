@@ -22,16 +22,16 @@ export async function Header() {
               Collection
             </Link>
             <Link
-              href="/#craftsmanship"
+              href="/#categories"
               className="text-xs uppercase tracking-[0.2em] text-[var(--sand)]/80 hover:text-[var(--gold)] transition-colors font-medium"
             >
-              Maison
+              Categories
             </Link>
             <Link
-              href="/#heritage"
+              href="/#why-us"
               className="text-xs uppercase tracking-[0.2em] text-[var(--sand)]/80 hover:text-[var(--gold)] transition-colors font-medium"
             >
-              Heritage
+              Why Us
             </Link>
           </nav>
 

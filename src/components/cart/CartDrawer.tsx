@@ -117,7 +117,7 @@ export function CartDrawer() {
               </div>
               <h3 className="font-serif text-xl text-[var(--ivory)]">Your Bag Is Empty</h3>
               <p className="text-xs text-[var(--muted)] max-w-xs leading-relaxed">
-                Discover our curated collection of mechanical timepieces and chronometers.
+                Discover our collection of quality wristwatches.
               </p>
               <div className="pt-2">
                 <Link

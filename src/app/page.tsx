@@ -30,7 +30,7 @@ export default async function HomePage() {
             <div className="lg:col-span-6 space-y-6 text-center lg:text-left z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/25 text-[var(--gold)] text-[11px] uppercase tracking-[0.25em] font-medium">
                 <Sparkles className="w-3 h-3" />
-                <span>Haute Horlogerie · Victoria Island</span>
+                <span>Original Wristwatches · Lagos, Nigeria</span>
               </div>
 
               <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-light text-[var(--ink)] tracking-tight leading-[1.08]">
@@ -41,7 +41,7 @@ export default async function HomePage() {
               </h1>
 
               <p className="text-base sm:text-lg text-[var(--muted)] max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
-                {BRAND.description} Every timepiece is hand-regulated and certified for supreme resilience under tropical humidity and demanding precision.
+                {BRAND.description} Every watch in our store is carefully tested for durability, water resistance, and accurate timekeeping.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
@@ -49,15 +49,15 @@ export default async function HomePage() {
                   href="/shop"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] font-semibold px-8 py-4 rounded-lg text-xs uppercase tracking-[0.2em] transition-all duration-200 shadow-lg hover:shadow-[var(--gold)]/20 hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <span>Explore Collection</span>
+                  <span>Shop Watches</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
 
                 <a
-                  href="#craftsmanship"
+                  href="#why-us"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-[var(--ink)]/20 hover:border-[var(--gold)] text-[var(--ink)] hover:text-[var(--gold-deep)] px-8 py-4 rounded-lg text-xs uppercase tracking-[0.2em] transition-colors"
                 >
-                  <span>Our Atelier</span>
+                  <span>Why Dave Store</span>
                 </a>
               </div>
 
@@ -89,7 +89,7 @@ export default async function HomePage() {
               <div className="relative w-full max-w-lg aspect-[4/3] sm:aspect-[16/10] lg:aspect-square rounded-2xl overflow-hidden border border-[var(--gold)]/20 shadow-2xl group">
                 <Image
                   src="/images/hero-watch.jpg"
-                  alt="Meridian Time Bespoke Tourbillon Watch"
+                  alt="Quality Wristwatch from Dave Store"
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -101,16 +101,16 @@ export default async function HomePage() {
                 <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl bg-[var(--charcoal)]/85 border border-[var(--gold)]/30 backdrop-blur-md flex items-center justify-between">
                   <div>
                     <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold)] block">
-                      Featured Masterpiece
+                      Best Seller
                     </span>
                     <span className="font-serif text-lg text-[var(--ivory)] font-medium">
-                      Meridian Sovereign Tourbillon
+                      Aurelian Gold Automatic
                     </span>
                   </div>
                   <Link
                     href="/shop"
                     className="p-2.5 rounded-lg bg-[var(--gold)]/20 hover:bg-[var(--gold)] text-[var(--gold)] hover:text-[var(--ink)] transition-colors"
-                    aria-label="View Sovereign Tourbillon"
+                    aria-label="View Aurelian Gold Automatic"
                   >
                     <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -122,16 +122,16 @@ export default async function HomePage() {
       </section>
 
       {/* Curated Categories */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="categories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] font-medium">
-            Horology Categories
+            Watch Categories
           </span>
           <h2 className="font-serif text-3xl sm:text-5xl text-[var(--ink)] font-light tracking-tight">
             Curated For Every Occasion
           </h2>
           <p className="text-sm text-[var(--muted)]">
-            Explore our collections designed for boardroom elegance, oceanic adventure, and timeless daily rituals.
+            Explore our collections designed for work, casual outings, church, and everyday style.
           </p>
         </div>
 
@@ -169,17 +169,17 @@ export default async function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 border-b border-[var(--sand)] pb-6">
             <div>
               <span className="text-xs uppercase tracking-[0.3em] text-[var(--gold)] font-medium">
-                The Showcase
+                Top Picks
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl text-[var(--ink)] font-light mt-1">
-                Featured Timepieces
+                Featured Watches
               </h2>
             </div>
             <Link
               href="/shop"
               className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--gold)] hover:text-[var(--ink)] transition-colors"
             >
-              <span>View All 8 Watches</span>
+              <span>View All Watches</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -245,14 +245,14 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Atelier & Craftsmanship Feature */}
-      <section id="craftsmanship" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Why Choose Dave Store Feature */}
+      <section id="why-us" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-[var(--charcoal)] border border-[var(--gold)]/20 rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center">
           {/* Craftsmanship Image */}
           <div className="lg:col-span-6 relative aspect-[4/3] lg:aspect-auto lg:h-full min-h-[380px]">
             <Image
               src="/images/craftsmanship.jpg"
-              alt="Master Watchmaker in Meridian Atelier"
+              alt="Quality watch testing and inspection at Dave Store"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
@@ -264,15 +264,15 @@ export default async function HomePage() {
           <div className="lg:col-span-6 p-8 sm:p-12 lg:p-16 space-y-6">
             <div className="inline-flex items-center gap-2 text-[var(--gold)] text-xs uppercase tracking-[0.25em]">
               <Compass className="w-3.5 h-3.5" />
-              <span>The Atelier Standard</span>
+              <span>Why Dave Store</span>
             </div>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[var(--ivory)] font-light leading-tight">
-              Calibrated With Relentless Precision
+              Quality Watches You Can Wear Anywhere
             </h2>
 
             <p className="text-sm text-[var(--muted)] leading-relaxed font-light">
-              Every Meridian timepiece represents more than three hundred individual micro-components moving in harmonious synchronicity. From sapphire crystal resistance to anti-magnetic hairsprings, each piece is individually inspected by master horologists before receiving our 12-month seal of authenticity.
+              At Dave Store, we carefully select wristwatches that look sharp, feel comfortable, and last for years. Whether you are dressing up for church, a business meeting, or a weekend outing, our watches give you that confident, premium look without breaking the bank.
             </p>
 
             <div className="grid grid-cols-2 gap-6 pt-2">
@@ -280,10 +280,10 @@ export default async function HomePage() {
                 <Shield className="w-5 h-5 text-[var(--gold)] shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs uppercase tracking-wider text-[var(--ivory)] font-medium">
-                    Certified Chronometer
+                    100% Original
                   </h4>
                   <p className="text-[11px] text-[var(--muted)] mt-0.5">
-                    Tested across 5 positions for timing accuracy.
+                    Tested for movement accuracy and build quality.
                   </p>
                 </div>
               </div>
@@ -292,10 +292,10 @@ export default async function HomePage() {
                 <Award className="w-5 h-5 text-[var(--gold)] shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs uppercase tracking-wider text-[var(--ivory)] font-medium">
-                    Concierge Delivery
+                    Fast Delivery
                   </h4>
                   <p className="text-[11px] text-[var(--muted)] mt-0.5">
-                    Hand-delivered in Lagos or insured nationwide.
+                    Doorstep delivery across Lagos and all 36 states.
                   </p>
                 </div>
               </div>
@@ -303,12 +303,12 @@ export default async function HomePage() {
 
             <div className="pt-4">
               <a
-                href={`https://wa.me/${BRAND.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hello Meridian Time, I would like to inquire about private viewings and bespoke timepieces.')}`}
+                href={`https://wa.me/${BRAND.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hello Dave Store, I want to inquire about your wristwatches.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] font-semibold px-6 py-3.5 rounded-lg text-xs uppercase tracking-[0.2em] transition-all"
               >
-                <span>Inquire With Concierge</span>
+                <span>Chat With Us on WhatsApp</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>

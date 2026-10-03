@@ -143,9 +143,9 @@ export function buildOrderConfirmationEmail({ order, items }: OrderConfirmationE
                 Thank you for your order, ${escapeHtml(firstName)}.
               </h1>
               <p style="font-size: 14px; line-height: 1.6; color: #A0A0A8; margin: 0;">
-                Your requisition has been securely recorded under order reference 
+                Your order has been recorded under order reference 
                 <strong style="color: #FAF7F2; font-family: monospace; font-size: 15px;">${order.orderNumber}</strong>. 
-                Our horology team is currently preparing your timepiece for insured courier transit.
+                Our team is currently preparing your watch for safe delivery.
               </p>
             </td>
           </tr>
@@ -226,11 +226,11 @@ export function buildOrderConfirmationEmail({ order, items }: OrderConfirmationE
             </td>
           </tr>
 
-          <!-- Support & Concierge Footer -->
+          <!-- Support Footer -->
           <tr>
             <td style="padding: 24px 32px; background-color: #0E0E10; border-top: 1px solid #222226; text-align: center;">
               <div style="font-size: 13px; color: #8E8E93; line-height: 1.6;">
-                Have questions regarding your timepiece or delivery? Reach our concierge at 
+                Have questions regarding your watch or delivery? Reach our support team at 
                 <a href="mailto:${BRAND.contactEmail}" style="color: #B8956A; text-decoration: none;">${BRAND.contactEmail}</a> 
                 or WhatsApp 
                 <a href="${BRAND.whatsappUrl}" style="color: #B8956A; text-decoration: none;">${BRAND.whatsapp}</a>.
@@ -250,7 +250,7 @@ export function buildOrderConfirmationEmail({ order, items }: OrderConfirmationE
   `.trim();
 
   const textLines = [
-    `MERIDIAN TIME - ORDER CONFIRMATION`,
+    `${BRAND.name.toUpperCase()} - ORDER CONFIRMATION`,
     `=================================`,
     `Thank you for your order, ${firstName}!`,
     `Order Reference: ${order.orderNumber}`,
@@ -276,7 +276,7 @@ export function buildOrderConfirmationEmail({ order, items }: OrderConfirmationE
       ? `BANK TRANSFER DETAILS:\nBank: ${SHOP.bankDetails.bankName}\nAccount Name: ${SHOP.bankDetails.accountName}\nAccount Number: ${SHOP.bankDetails.accountNumber}\nReference: ${order.orderNumber}\n${SHOP.bankDetails.instructions}`
       : `PAYMENT METHOD: Pay on Delivery in ${order.state}`,
     ``,
-    `Need assistance? Contact concierge at ${BRAND.contactEmail} or WhatsApp ${BRAND.whatsapp}.`,
+    `Need assistance? Contact support at ${BRAND.contactEmail} or WhatsApp ${BRAND.whatsapp}.`,
   ];
 
   return {

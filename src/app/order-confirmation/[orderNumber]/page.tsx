@@ -8,7 +8,7 @@ import { OrderConfirmationTracker } from '@/components/orders/OrderConfirmationT
 
 export const metadata: Metadata = {
   title: `Order Confirmation | ${BRAND.name}`,
-  description: 'Your timepiece acquisition receipt, payment coordinates, and transit status.',
+  description: 'Your watch order receipt, payment details, and delivery status.',
 };
 
 export default async function OrderConfirmationPage({

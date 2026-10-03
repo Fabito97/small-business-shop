@@ -19,7 +19,7 @@ export function Footer() {
                 100% Authenticity
               </h4>
               <p className="text-xs text-[var(--muted)] mt-1 leading-relaxed">
-                Every timepiece undergoes rigorous multi-point movement and chronometer verification.
+                Every watch is 100% verified original and tested before delivery.
               </p>
             </div>
           </div>
@@ -33,7 +33,7 @@ export function Footer() {
                 12-Month Warranty
               </h4>
               <p className="text-xs text-[var(--muted)] mt-1 leading-relaxed">
-                Comprehensive mechanical protection and complimentary movement calibration.
+                Full warranty coverage on movement and internal mechanisms.
               </p>
             </div>
           </div>
@@ -47,7 +47,7 @@ export function Footer() {
                 Nationwide Delivery
               </h4>
               <p className="text-xs text-[var(--muted)] mt-1 leading-relaxed">
-                Insured transit across all 36 Nigerian states. Free on orders over{' '}
+                Safe delivery to your doorstep across all 36 states in Nigeria. Free on orders over{' '}
                 {formatNaira(SHOP.freeShippingThresholdKobo)}.
               </p>
             </div>
@@ -59,10 +59,10 @@ export function Footer() {
             </div>
             <div>
               <h4 className="text-sm font-medium text-[var(--ivory)] uppercase tracking-wider">
-                Concierge Support
+                WhatsApp Support
               </h4>
               <p className="text-xs text-[var(--muted)] mt-1 leading-relaxed">
-                Direct WhatsApp access to our horology advisors for personalized selection.
+                Quick responses directly on WhatsApp for orders, advice, and delivery updates.
               </p>
             </div>
           </div>
@@ -84,15 +84,15 @@ export function Footer() {
           </p>
           <div className="pt-2 text-xs text-[var(--sand)]/80 space-y-1">
             <p className="font-medium text-[var(--ivory)]">{BRAND.location}</p>
-            <p>Direct: {BRAND.phone}</p>
-            <p>Client Inquiries: {BRAND.email}</p>
+            <p>Phone: {BRAND.phone}</p>
+            <p>Email: {BRAND.email}</p>
           </div>
         </div>
 
         {/* Collections */}
         <div className="md:col-span-3 space-y-3">
           <h5 className="text-xs uppercase tracking-[0.25em] text-[var(--gold)] font-medium">
-            Timepiece Collections
+            Watch Collections
           </h5>
           <ul className="space-y-2 text-xs text-[var(--sand)]/80">
             {SHOP.categories.map((cat) => (
@@ -108,14 +108,14 @@ export function Footer() {
           </ul>
         </div>
 
-        {/* Private Client & Security */}
+        {/* Payment & Support */}
         <div className="md:col-span-4 space-y-3">
           <h5 className="text-xs uppercase tracking-[0.25em] text-[var(--gold)] font-medium">
-            Client Services & Assurance
+            Payment & Safe Shopping
           </h5>
           <p className="text-xs text-[var(--muted)] leading-relaxed">
-            Payment transactions are accepted via Direct Bank Wire into our verified corporate account
-            at {SHOP.bankDetails.bankName}, or Pay on Delivery in supported regions.
+            Settle securely via Instant Online Card payment, Direct Bank Transfer into our verified account
+            at {SHOP.bankDetails.bankName}, or Pay on Delivery in Lagos.
           </p>
           <div className="pt-2">
             <a
@@ -124,7 +124,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[var(--gold)] hover:text-[var(--ivory)] transition-colors"
             >
-              <span>Connect on WhatsApp Concierge &rarr;</span>
+              <span>Chat With Us on WhatsApp &rarr;</span>
             </a>
           </div>
         </div>
@@ -135,7 +135,7 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--muted)]">
           <p>&copy; {new Date().getFullYear()} {BRAND.legalName}. All rights reserved.</p>
           <p className="text-[11px] tracking-wide">
-            Designed for horology enthusiasts and discerning collectors.
+            Quality wristwatches for everyday confidence across Nigeria.
           </p>
         </div>
       </div>

@@ -136,7 +136,7 @@ export function OrderConfirmationTracker({
         </div>
 
         <span className="text-xs uppercase tracking-[0.25em] font-semibold text-[var(--gold)] block">
-          {isConfirmed ? 'Order Verified & Secured' : 'Requisition Recorded'}
+          {isConfirmed ? 'Order Verified & Secured' : 'Order Placed'}
         </span>
 
         <h1 className="font-serif text-3xl sm:text-5xl text-[var(--ink)] font-normal">
@@ -144,7 +144,7 @@ export function OrderConfirmationTracker({
         </h1>
 
         <p className="text-[var(--muted)] text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
-          Your timepiece acquisition has been registered. An official receipt has been dispatched to{' '}
+          Your watch order has been recorded. An official receipt has been sent to{' '}
           <strong className="text-[var(--ink)] font-medium">{order.customerEmail}</strong>.
         </p>
       </div>
@@ -240,7 +240,7 @@ export function OrderConfirmationTracker({
               <div>
                 <h3 className="font-serif text-xl text-white">Payment Authorized & Verified</h3>
                 <p className="text-xs text-stone-300 mt-0.5">
-                  Full settlement of <strong className="text-emerald-400">{formatNaira(order.totalKobo)}</strong> was recorded. Order is queued for secured dispatch.
+                  Full payment of <strong className="text-emerald-400">{formatNaira(order.totalKobo)}</strong> was received. Your watch is being prepared for delivery.
                 </p>
               </div>
             </div>
@@ -362,7 +362,7 @@ export function OrderConfirmationTracker({
                 Pay on Delivery Reserved
               </h3>
               <p className="text-xs text-[var(--muted)] mt-0.5">
-                Our logistics personnel will present your timepiece for inspection. You may settle {formatNaira(order.totalKobo)} using cash or debit card terminal.
+                Our delivery rider will present your watch for inspection. You can pay {formatNaira(order.totalKobo)} using cash or card POS.
               </p>
             </div>
           </div>
@@ -374,7 +374,7 @@ export function OrderConfirmationTracker({
         {/* Items Purchased */}
         <div className="md:col-span-7 bg-white border border-[var(--sand)] rounded-xl p-6 shadow-sm space-y-5">
           <h3 className="font-serif text-xl text-[var(--ink)] border-b border-[var(--sand)] pb-3">
-            Timepieces Acquired ({items.length})
+            Watches in This Order ({items.length})
           </h3>
 
           <div className="divide-y divide-[var(--sand)] space-y-4">
@@ -487,14 +487,14 @@ export function OrderConfirmationTracker({
           href="/orders"
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[var(--ink)] text-[var(--ivory)] rounded-md font-medium text-sm hover:bg-[var(--gold-deep)] transition-colors shadow-sm"
         >
-          <span>View My Order Portfolio</span>
+          <span>View My Orders</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
         <Link
           href="/shop"
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white border border-[var(--sand)] text-[var(--ink)] rounded-md font-medium text-sm hover:bg-[var(--sand)]/40 transition-colors"
         >
-          <span>Continue Exploring Vault</span>
+          <span>Continue Shopping</span>
         </Link>
       </div>
     </div>

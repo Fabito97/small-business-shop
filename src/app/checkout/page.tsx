@@ -6,7 +6,7 @@ import { BRAND } from '@/config/brand';
 
 export const metadata: Metadata = {
   title: `Secure Checkout | ${BRAND.name}`,
-  description: 'Complete your luxury timepiece requisition with insured nationwide transit.',
+  description: 'Complete your watch order with fast, safe nationwide delivery.',
 };
 
 export default async function CheckoutPage() {
@@ -21,13 +21,13 @@ export default async function CheckoutPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 md:mb-14">
           <span className="text-xs uppercase tracking-[0.25em] font-semibold text-[var(--gold)]">
-            Discreet & Insured
+            Safe & Secure
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[var(--ink)] mt-2 font-normal">
-            Finalize Your Acquisition
+            Checkout & Delivery
           </h1>
           <p className="text-[var(--muted)] text-sm md:text-base mt-2 max-w-xl">
-            Each timepiece is packaged in our signature horology presentation case and shipped via insured transit.
+            Every watch is carefully checked, packaged in a presentation box, and delivered safely to your address.
           </p>
         </div>
 

@@ -13,29 +13,29 @@ export const SHOP = {
   freeShippingThresholdKobo: 100_000_000, // ₦1,000,000
   bankDetails: {
     bankName: 'Zenith Bank',
-    accountName: 'Meridian Time Luxury Ltd',
+    accountName: 'Dave Store',
     accountNumber: '1012345678',
     instructions:
-      'Please make a direct bank transfer using your Order Number as the payment reference. Once transferred, your order status will be updated by our team upon confirmation.',
+      'Please make a direct bank transfer using your Order Number as the payment reference or narration. Your order will be confirmed automatically or by our team upon receiving the alert.',
   },
   paymentMethods: [
     {
       id: 'pay_on_delivery',
       label: 'Pay on Delivery',
-      description: 'Available in supported delivery regions. Cash or card upon arrival.',
+      description: 'Available in Lagos. Inspect your watch and pay cash or card to the rider.',
     },
     {
       id: 'bank_transfer',
       label: 'Direct Bank Transfer',
-      description: 'Transfer directly to our corporate bank account. Details provided on confirmation.',
+      description: 'Transfer directly to our Zenith Bank account. Details shown after placing order.',
     },
   ] as const,
   payOnDeliveryStates: PAY_ON_DELIVERY_SUPPORTED_STATES,
   categories: [
-    { id: 'dress', label: 'Dress', description: 'Slim profiles, champagne dials, and fine leather.' },
-    { id: 'sport', label: 'Sport', description: 'Chronographs and robust divers built for resilience.' },
-    { id: 'classic', label: 'Classic', description: 'Timeless Roman numerals and heritage silhouettes.' },
-    { id: 'smart', label: 'Smart', description: 'Modern connected watches with enduring aesthetic.' },
+    { id: 'dress', label: 'Dress', description: 'Clean gold, silver dials, and leather straps for formal events.' },
+    { id: 'sport', label: 'Sport', description: 'Water-resistant sports and chronograph watches built to last.' },
+    { id: 'classic', label: 'Classic', description: 'Timeless Roman numerals and classic watch designs.' },
+    { id: 'smart', label: 'Smart', description: 'Modern smartwatches for fitness, calls, and daily productivity.' },
   ] as const,
   nigerianStates: [
     'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno',

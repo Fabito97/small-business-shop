@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 
   if (!product) {
     return {
-      title: `Timepiece Not Found — ${BRAND.name}`,
+      title: `Watch Not Found — ${BRAND.name}`,
     };
   }
 
@@ -52,11 +52,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
       {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-2 text-xs uppercase tracking-wider text-[var(--muted)]">
         <Link href="/" className="hover:text-[var(--gold)] transition-colors">
-          Atelier
+          Home
         </Link>
         <ChevronRight className="w-3 h-3" />
         <Link href="/shop" className="hover:text-[var(--gold)] transition-colors">
-          Collection
+          Watches
         </Link>
         <ChevronRight className="w-3 h-3" />
         <span className="text-[var(--gold)] truncate max-w-[200px] sm:max-w-none">
@@ -67,16 +67,16 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
       {/* Main Detail Presentation */}
       <ProductDetailClient product={product} />
 
-      {/* Related Timepieces */}
+      {/* Related Watches */}
       {relatedProducts.length > 0 && (
         <section className="pt-16 border-t border-[var(--sand)] space-y-8">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-xs uppercase tracking-[0.25em] text-[var(--gold)] font-medium">
-                Related Calibers
+                Similar Watches
               </span>
               <h2 className="font-serif text-2xl sm:text-3xl text-[var(--ink)] font-light mt-1">
-                More From The {product.category} Collection
+                More {product.category.charAt(0).toUpperCase() + product.category.slice(1)} Watches
               </h2>
             </div>
             <Link

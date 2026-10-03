@@ -81,7 +81,7 @@ export class OrderService {
       if (dbProducts.length !== uniqueProductIds.length) {
         throw new OrderError(
           'PRODUCT_UNAVAILABLE',
-          'One or more selected timepieces are no longer available in our vault'
+          'One or more selected watches are no longer available in our store.'
         );
       }
 
@@ -105,7 +105,7 @@ export class OrderService {
         if (prod.stock < requestedQty) {
           throw new OrderError(
             'OUT_OF_STOCK',
-            `Insufficient vault stock for "${prod.name}". Only ${prod.stock} piece(s) available.`
+            `Insufficient stock for "${prod.name}". Only ${prod.stock} piece(s) available.`
           );
         }
 

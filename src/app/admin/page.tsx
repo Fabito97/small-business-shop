@@ -8,7 +8,7 @@ import { BRAND } from '@/config/brand';
 
 export const metadata: Metadata = {
   title: `Store Operations & Administration | ${BRAND.name}`,
-  description: 'Operations console for timepiece fulfillment and revenue logs.',
+  description: 'Operations console for watch orders, fulfillment, and revenue.',
 };
 
 export const dynamic = 'force-dynamic';

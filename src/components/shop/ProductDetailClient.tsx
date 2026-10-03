@@ -85,15 +85,15 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           <div className="absolute top-4 right-4">
             {isOutOfStock ? (
               <span className="px-3 py-1 rounded-full bg-[var(--ink)]/90 backdrop-blur-md border border-[var(--danger)]/50 text-xs uppercase tracking-wider text-[var(--danger)] font-medium">
-                Vault Out of Stock
+                Out of Stock
               </span>
             ) : isLowStock ? (
               <span className="px-3 py-1 rounded-full bg-[var(--warning)]/20 backdrop-blur-md border border-[var(--warning)]/40 text-xs uppercase tracking-wider text-[var(--warning)] font-medium">
-                Only {product.stock} Timepieces Available
+                Only {product.stock} Left in Stock
               </span>
             ) : (
               <span className="px-3 py-1 rounded-full bg-[var(--success)]/10 backdrop-blur-md border border-[var(--success)]/30 text-xs uppercase tracking-wider text-[var(--success)] font-medium">
-                In Stock · Ready For Immediate Dispatch
+                In Stock · Ready to Deliver
               </span>
             )}
           </div>
@@ -119,7 +119,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         )}
       </div>
 
-      {/* Right Column: Horology Specs & Acquisition */}
+      {/* Right Column: Watch Specs & Purchase */}
       <div className="lg:col-span-5 space-y-8">
         {/* Brand & Title */}
         <div className="space-y-2 border-b border-[var(--sand)] pb-6">
@@ -180,14 +180,14 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         {/* Description Narrative */}
         <div className="space-y-3">
           <h3 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-medium">
-            Atelier Note
+            About This Watch
           </h3>
-          <p className="text-sm text-[var(--sand)]/80 leading-relaxed font-light">
+          <p className="text-sm text-[var(--muted)]/80 leading-relaxed font-light">
             {product.description}
           </p>
         </div>
 
-        {/* Acquisition Actions (Quantity + Add to Cart) */}
+        {/* Purchase Actions (Quantity + Add to Cart) */}
         {!isOutOfStock ? (
           <div className="space-y-4 pt-2">
             <div className="flex items-center gap-4">
@@ -216,7 +216,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 className="flex-1 inline-flex items-center justify-center gap-3 bg-[var(--gold)] hover:bg-[var(--gold-deep)] text-[var(--ink)] font-semibold py-3.5 px-6 rounded-lg text-xs uppercase tracking-[0.2em] transition-all duration-200 shadow-lg hover:shadow-[var(--gold)]/20"
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>Acquire Timepiece</span>
+                <span>Add to Cart</span>
               </button>
             </div>
 
@@ -227,13 +227,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               className="w-full inline-flex items-center justify-center gap-2.5 border border-[var(--gold)]/30 hover:border-[var(--gold)] text-[var(--gold)] hover:text-[var(--ink)] py-3 px-6 rounded-lg text-xs uppercase tracking-wider transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>Inquire With Concierge On WhatsApp</span>
+              <span>Chat With Us on WhatsApp</span>
             </a>
           </div>
         ) : (
           <div className="space-y-3 pt-2">
             <div className="p-4 rounded-xl bg-[var(--danger)]/10 border border-[var(--danger)]/30 text-xs text-[var(--danger)] text-center">
-              This edition is currently out of vault stock. Inquire with our concierge for reserved re-allocations.
+              This watch is currently sold out. Chat with us on WhatsApp to check when more units arrive.
             </div>
             <a
               href={`https://wa.me/${BRAND.whatsapp.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`}
@@ -242,7 +242,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               className="w-full inline-flex items-center justify-center gap-2.5 bg-[var(--charcoal)] border border-[var(--gold)]/30 text-[var(--gold)] py-3 px-6 rounded-lg text-xs uppercase tracking-wider hover:bg-[var(--ink)] transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>Request Waitlist Notification</span>
+              <span>Ask About Next Restock</span>
             </a>
           </div>
         )}
@@ -252,21 +252,21 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           <div className="flex items-start gap-3">
             <Truck className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[var(--ink)] font-medium">Secured Transit:</strong> Delivery within 1–3 business days in Lagos; 3–5 business days nationwide. Complimentary on orders over {formatNaira(SHOP.freeShippingThresholdKobo)}.
+              <strong className="text-[var(--ink)] font-medium">Fast Delivery:</strong> Delivery within 1–3 business days in Lagos; 3–5 business days nationwide. Free delivery on orders over {formatNaira(SHOP.freeShippingThresholdKobo)}.
             </p>
           </div>
 
           <div className="flex items-start gap-3">
             <ShieldCheck className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[var(--ink)] font-medium">Official Provenance:</strong> Includes certificate of authenticity and 12-month manufacturer warranty.
+              <strong className="text-[var(--ink)] font-medium">Original Guarantee:</strong> 100% authentic watch with 12-month warranty included.
             </p>
           </div>
 
           <div className="flex items-start gap-3">
             <Clock className="w-4 h-4 text-[var(--gold)] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[var(--ink)] font-medium">Settlement:</strong> Direct corporate wire transfer or Pay on Delivery in supported states.
+              <strong className="text-[var(--ink)] font-medium">Payment Options:</strong> Bank transfer, online payment, or Pay on Delivery (in Lagos).
             </p>
           </div>
         </div>

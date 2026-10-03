@@ -79,7 +79,7 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
           <div className="font-serif text-3xl font-bold text-[var(--ink)]">
             {formatNaira(stats.totalRevenueKobo)}
           </div>
-          <p className="text-xs text-[var(--muted)]">Settled & in-transit requisitions</p>
+          <p className="text-xs text-[var(--muted)]">Settled & in-transit orders</p>
         </div>
 
         {/* Total Orders */}
@@ -195,7 +195,7 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
             <div className="w-12 h-12 rounded-full bg-[var(--sand)]/40 flex items-center justify-center text-[var(--muted)] mx-auto">
               <Package className="w-6 h-6" />
             </div>
-            <p className="font-serif text-xl text-[var(--ink)]">No matching requisitions found</p>
+            <p className="font-serif text-xl text-[var(--ink)]">No matching orders found</p>
             <p className="text-xs text-[var(--muted)] max-w-sm mx-auto">
               No orders found for status &quot;{selectedStatus}&quot;{searchQuery ? ` matching "${searchQuery}"` : ''}.
             </p>
@@ -322,7 +322,7 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
               <div className="flex items-center justify-between border-b border-[var(--sand)] pb-4">
                 <div>
                   <span className="text-xs uppercase tracking-wider text-[var(--muted)] font-medium block">
-                    Requisition Record
+                    Order Details
                   </span>
                   <h3 className="font-mono text-xl font-bold text-[var(--ink)]">
                     {activeOrder.orderNumber}
@@ -361,7 +361,7 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
                     <option value="confirmed">Confirmed</option>
                     <option value="shipped">In Transit (Shipped)</option>
                     <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled (Restock Timepieces)</option>
+                    <option value="cancelled">Cancelled (Restock Watches)</option>
                   </select>
                 </div>
 
@@ -378,7 +378,7 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
               {/* Customer & Shipping Information */}
               <div className="space-y-3">
                 <h4 className="text-xs uppercase tracking-wider text-[var(--muted)] font-semibold border-b border-[var(--sand)] pb-1.5">
-                  Client & Courier Destination
+                  Customer & Delivery Address
                 </h4>
                 <div className="text-xs space-y-1.5 text-[var(--muted)]">
                   <div className="font-semibold text-sm text-[var(--ink)]">
@@ -403,7 +403,7 @@ export function AdminDashboardClient({ admin }: AdminDashboardClientProps) {
               {/* Items Acquired */}
               <div className="space-y-3">
                 <h4 className="text-xs uppercase tracking-wider text-[var(--muted)] font-semibold border-b border-[var(--sand)] pb-1.5">
-                  Timepieces In Requisition ({activeOrder.items.length})
+                  Watches in This Order ({activeOrder.items.length})
                 </h4>
 
                 <div className="divide-y divide-[var(--sand)] space-y-3">
