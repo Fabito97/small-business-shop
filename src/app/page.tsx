@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Compass, Shield, Award, Sparkles } from 'lucide-react';
-import { db } from '@/server/db';
-import { products } from '@/server/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { ProductService } from '@/server/services';
+import type { Product } from '@/server/db/schema';
 import { BRAND } from '@/config/brand';
 import { SHOP } from '@/config/shop';
 import { formatNaira } from '@/lib/money';
@@ -11,15 +10,9 @@ import { formatNaira } from '@/lib/money';
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function HomePage() {
-  // Query active featured products directly from Neon
-  let featuredWatches: (typeof products.$inferSelect)[] = [];
+  let featuredWatches: Product[] = [];
   try {
-    featuredWatches = await db
-      .select()
-      .from(products)
-      .where(eq(products.isActive, true))
-      .orderBy(desc(products.featured), desc(products.createdAt))
-      .limit(4);
+    featuredWatches = await ProductService.getFeaturedProducts(4);
   } catch (error) {
     console.error('[homepage] Failed to load featured products:', error);
   }

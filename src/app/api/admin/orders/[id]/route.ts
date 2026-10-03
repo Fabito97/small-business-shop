@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, AuthError } from '@/server/auth/guards';
-import { updateOrderStatus } from '@/server/orders';
+import { AdminService } from '@/server/services';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -29,7 +29,7 @@ export async function PATCH(
 
     const { status } = updateStatusSchema.parse(body);
 
-    const updated = await updateOrderStatus(id, status);
+    const updated = await AdminService.updateOrderStatus(id, status);
     if (!updated) {
       return NextResponse.json(
         { error: { code: 'NOT_FOUND', message: 'Order record not found' } },

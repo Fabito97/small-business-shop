@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { deleteSession, SESSION_COOKIE_NAME } from '@/server/auth/session';
+import { AuthService, SESSION_COOKIE_NAME } from '@/server/services/auth.service';
 
 export async function POST(request: Request): Promise<Response> {
   const cookieStore = await cookies();
@@ -7,7 +7,7 @@ export async function POST(request: Request): Promise<Response> {
 
   if (token) {
     try {
-      await deleteSession(token);
+      await AuthService.logout(token);
     } catch (error) {
       console.error('[auth] Error deleting session:', error);
     }
@@ -34,7 +34,7 @@ export async function GET(): Promise<Response> {
 
   if (token) {
     try {
-      await deleteSession(token);
+      await AuthService.logout(token);
     } catch (error) {
       console.error('[auth] Error deleting session on GET:', error);
     }

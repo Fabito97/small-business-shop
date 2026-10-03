@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Package, ArrowRight, Calendar, Building2, Banknote, ExternalLink } from 'lucide-react';
 
 import { requireUser } from '@/server/auth/guards';
-import { getUserOrders } from '@/server/orders';
+import { OrderService } from '@/server/services';
 import { formatNaira } from '@/lib/money';
 import { BRAND } from '@/config/brand';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -18,7 +18,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function MyOrdersPage() {
   const user = await requireUser();
-  const orders = await getUserOrders(user.id);
+  const orders = await OrderService.getUserOrders(user.id);
 
   return (
     <div className="min-h-screen bg-[var(--ivory)] py-12 md:py-20">

@@ -291,3 +291,23 @@
 
 ### Decisions and assumptions
 - Preserved `text-[var(--ivory)]` on dark elements (`bg-[var(--charcoal)]`, `bg-[var(--ink)]`) for consistent dark-luxury editorial depth while enforcing `text-[var(--ink)]` on page-level backgrounds.
+
+## Server-Side Services Architecture Refactoring
+
+### What was implemented
+- **Domain-Driven Service Layer (`src/server/services/`)**:
+  - Implemented `ProductService` (`src/server/services/product.service.ts`): Encapsulates catalog queries, complex filtering (category, price range, in-stock condition), keyword search (name, brand, description), sorting, pagination, featured watches, and related calibers.
+  - Implemented `OrderService` (`src/server/services/order.service.ts`): Encapsulates atomic ACID order transactions on the Neon WebSocket Pool, inventory re-validation, stock decrements, order cancellation with automatic restocking, and secure multi-tier order retrieval.
+  - Implemented `AdminService` (`src/server/services/admin.service.ts`): Encapsulates store analytics (total revenue, order counts, pending counts), filtered order queries for back-office staff, and order status lifecycle updates.
+  - Implemented `AuthService` (`src/server/services/auth.service.ts`): Encapsulates Google OAuth handshake, PKCE code verifier creation, token exchange, user record upsert with `ADMIN_EMAILS` resolution, and session creation/invalidation.
+  - Implemented `EmailService` (`src/server/services/email.service.ts`): Encapsulates transactional customer confirmation receipts and owner dispatch notifications via Mailgun HTTP API with automated database timestamping (`emailSentAt`).
+- **Complete Elimination of Leaky Database Calls in Presentation & Controllers**:
+  - Refactored `src/app/page.tsx` and `src/app/shop/[slug]/page.tsx` to completely remove raw `db` queries, replacing them with typed `ProductService` calls.
+  - Refactored all API route handlers (`/api/products`, `/api/orders`, `/api/orders/[orderNumber]`, `/api/admin/orders`, `/api/admin/orders/[id]`, `/api/auth/google`, `/api/auth/google/callback`, `/api/auth/logout`) into clean, thin HTTP controllers that delegate exclusively to the domain services.
+  - Direct database access (`db`) is now strictly isolated within `src/server/services/` and `src/server/db/`.
+
+### Challenges
+- Ensuring existing callers and internal helpers maintained backwards compatibility while migrating to structured class-based service abstractions. Solved by providing barrel exports in `src/server/services/index.ts` and delegators in `src/server/orders/index.ts`.
+
+### Decisions and assumptions
+- Enforced `import 'server-only'` across all service modules to guarantee that database logic, external API keys, and server infrastructure never leak into client bundles.

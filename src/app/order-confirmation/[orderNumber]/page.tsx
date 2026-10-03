@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 import { getCurrentUser } from '@/server/auth/guards';
-import { getOrder } from '@/server/orders';
+import { OrderService } from '@/server/services';
 import { formatNaira } from '@/lib/money';
 import { BRAND } from '@/config/brand';
 import { SHOP } from '@/config/shop';
@@ -38,7 +38,7 @@ export default async function OrderConfirmationPage({
     redirect(`/login?next=/order-confirmation/${orderNumber}`);
   }
 
-  const result = await getOrder(orderNumber, user.id, user.role === 'admin');
+  const result = await OrderService.getOrder(orderNumber, user.id, user.role === 'admin');
 
   if (!result) {
     notFound();

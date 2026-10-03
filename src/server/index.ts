@@ -7,3 +7,4 @@ export * from './db';
 export * from './orders';
 export * from './email/mailgun';
 export * from './email/templates';
+export * from './services';

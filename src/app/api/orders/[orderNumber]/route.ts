@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireUser } from '@/server/auth/guards';
-import { AuthError } from '@/server/auth/guards';
-import { getOrder } from '@/server/orders';
+import { requireUser, AuthError } from '@/server/auth/guards';
+import { OrderService } from '@/server/services';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +12,7 @@ export async function GET(
     const user = await requireUser();
     const { orderNumber } = await params;
 
-    const result = await getOrder(orderNumber, user.id, user.role === 'admin');
+    const result = await OrderService.getOrder(orderNumber, user.id, user.role === 'admin');
 
     if (!result) {
       return NextResponse.json(

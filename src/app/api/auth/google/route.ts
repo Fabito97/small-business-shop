@@ -1,25 +1,11 @@
 import { cookies } from 'next/headers';
-import { generateState, generateCodeVerifier } from 'arctic';
-import { google } from '@/server/auth/google';
+import { AuthService } from '@/server/services/auth.service';
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const nextParam = url.searchParams.get('next');
 
-  // Sanitize next redirect parameter (must begin with a single '/' and not '//')
-  let nextUrl = '/';
-  if (nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')) {
-    nextUrl = nextParam;
-  }
-
-  const state = generateState();
-  const codeVerifier = generateCodeVerifier();
-
-  const authUrl = google.createAuthorizationURL(state, codeVerifier, [
-    'openid',
-    'profile',
-    'email',
-  ]);
+  const { url: authUrl, state, codeVerifier, nextUrl } = AuthService.initiateGoogleAuth(nextParam);
 
   const cookieStore = await cookies();
   const isProd = process.env.NODE_ENV === 'production';

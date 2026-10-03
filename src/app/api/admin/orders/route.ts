@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, AuthError } from '@/server/auth/guards';
-import { getAdminOrders, getAdminStats } from '@/server/orders';
+import { AdminService } from '@/server/services';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,8 +12,8 @@ export async function GET(req: NextRequest) {
     const statusFilter = searchParams.get('status') || undefined;
 
     const [orders, stats] = await Promise.all([
-      getAdminOrders(statusFilter),
-      getAdminStats(),
+      AdminService.getOrders(statusFilter),
+      AdminService.getStats(),
     ]);
 
     return NextResponse.json({ orders, stats });

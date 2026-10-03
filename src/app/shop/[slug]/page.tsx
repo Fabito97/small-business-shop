@@ -2,9 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, ArrowLeft } from 'lucide-react';
-import { db } from '@/server/db';
-import { products } from '@/server/db/schema';
-import { eq, and, ne } from 'drizzle-orm';
+import { ProductService } from '@/server/services';
 import { BRAND } from '@/config/brand';
 import { ProductDetailClient } from '@/components/shop/ProductDetailClient';
 import { ProductCard } from '@/components/shop/ProductCard';
@@ -15,11 +13,7 @@ interface ProductDetailPageProps {
 
 export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const [product] = await db
-    .select()
-    .from(products)
-    .where(and(eq(products.slug, slug), eq(products.isActive, true)))
-    .limit(1);
+  const product = await ProductService.getProductBySlug(slug);
 
   if (!product) {
     return {
@@ -40,29 +34,18 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { slug } = await params;
-
-  const [product] = await db
-    .select()
-    .from(products)
-    .where(and(eq(products.slug, slug), eq(products.isActive, true)))
-    .limit(1);
+  const product = await ProductService.getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
   // Fetch related watches from the same category
-  const relatedProducts = await db
-    .select()
-    .from(products)
-    .where(
-      and(
-        eq(products.isActive, true),
-        eq(products.category, product.category),
-        ne(products.id, product.id)
-      )
-    )
-    .limit(4);
+  const relatedProducts = await ProductService.getRelatedProducts(
+    product.category,
+    product.slug,
+    4
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">

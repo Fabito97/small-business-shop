@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireUser } from '@/server/auth/guards';
-import { AuthError } from '@/server/auth/guards';
-import { createOrder, getUserOrders, OrderError } from '@/server/orders';
-import { sendEmail } from '@/server/email/mailgun';
-import { buildOrderConfirmationEmail, buildOwnerNotificationEmail } from '@/server/email/templates';
+import { requireUser, AuthError } from '@/server/auth/guards';
+import { OrderService, OrderError } from '@/server/services/order.service';
 import { createOrderSchema } from '@/lib/validators';
-import { db } from '@/server/db';
-import { orders } from '@/server/db/schema';
-import { eq } from 'drizzle-orm';
 import { ZodError } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -47,42 +41,9 @@ export async function POST(req: NextRequest) {
     // Validate request schema with Zod
     const validatedInput = createOrderSchema.parse(body);
 
-    // Call atomic order transaction (re-pricing & inventory decrement)
+    // Call atomic order transaction (re-pricing, inventory decrement, & confirmation email orchestration)
     // Rule: Customer email strictly comes from the verified user session
-    const { order, items } = await createOrder(user.id, user.email, validatedInput);
-
-    // Dispatch confirmation email (non-blocking failure: failure must never abort order)
-    try {
-      const emailPayload = buildOrderConfirmationEmail({ order, items });
-      const delivered = await sendEmail({
-        to: order.customerEmail,
-        subject: emailPayload.subject,
-        html: emailPayload.html,
-        text: emailPayload.text,
-      });
-
-      if (delivered) {
-        await db
-          .update(orders)
-          .set({ emailSentAt: new Date() })
-          .where(eq(orders.id, order.id));
-      }
-
-      // Optional notification to business owner
-      if (process.env.OWNER_NOTIFY_EMAIL) {
-        const ownerPayload = buildOwnerNotificationEmail({ order, items });
-        await sendEmail({
-          to: process.env.OWNER_NOTIFY_EMAIL,
-          subject: ownerPayload.subject,
-          html: ownerPayload.html,
-          text: ownerPayload.text,
-        }).catch((err) => {
-          console.error('[Mailgun] Owner notification failed:', err);
-        });
-      }
-    } catch (emailErr) {
-      console.error('[Mailgun] Error dispatching order confirmation email:', emailErr);
-    }
+    const { order } = await OrderService.createOrder(user.id, user.email, validatedInput);
 
     return NextResponse.json(
       { orderNumber: order.orderNumber },
@@ -128,7 +89,7 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   try {
     const user = await requireUser();
-    const userOrders = await getUserOrders(user.id);
+    const userOrders = await OrderService.getUserOrders(user.id);
     return NextResponse.json({ orders: userOrders });
   } catch (error: unknown) {
     if (error instanceof AuthError) {

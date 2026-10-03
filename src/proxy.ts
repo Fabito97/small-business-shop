@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 const PROTECTED_PREFIXES = ['/checkout', '/orders', '/order-confirmation', '/admin'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   const isProtected = PROTECTED_PREFIXES.some(
