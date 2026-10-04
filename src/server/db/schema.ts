@@ -1,7 +1,7 @@
 // src/server/db/schema.ts  (Drizzle ORM, Neon Postgres)
 import { sql, relations } from 'drizzle-orm';
 import {
-  pgTable, uuid, text, bigint, integer, boolean, timestamp, index, check,
+  pgTable, uuid, text, bigint, integer, boolean, timestamp, index, check, uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
 const ts = (name: string) => timestamp(name, { withTimezone: true });
@@ -100,7 +100,35 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   product: one(products, { fields: [orderItems.productId], references: [products.id] }),
 }));
 
+// ---------- CART ITEMS (Cross-device sync for Web & Mobile) ----------
+export const cartItems = pgTable(
+  'cart_items',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'cascade' }),
+    quantity: integer('quantity').notNull().default(1),
+    createdAt: ts('created_at').notNull().defaultNow(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex('cart_user_product_idx').on(t.userId, t.productId),
+    index('cart_user_idx').on(t.userId),
+    check('cart_quantity_pos', sql`${t.quantity} > 0`),
+  ]
+);
+
+export const cartItemsRelations = relations(cartItems, ({ one }) => ({
+  user: one(users, { fields: [cartItems.userId], references: [users.id] }),
+  product: one(products, { fields: [cartItems.productId], references: [products.id] }),
+}));
+
 export type User = typeof users.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type Order = typeof orders.$inferSelect;
 export type OrderItem = typeof orderItems.$inferSelect;
+export type CartItem = typeof cartItems.$inferSelect;

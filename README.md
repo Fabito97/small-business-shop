@@ -143,5 +143,35 @@ Add any user's Google account email address to the `ADMIN_EMAILS` environment va
 
 ---
 
+## Mobile Client Integration (React Native / Expo Go)
+
+The backend provides complete support for native mobile apps:
+
+### 1. CORS & Preflight Requests
+All `/api/*` routes support Cross-Origin Resource Sharing (CORS) with preflight `OPTIONS` handled automatically at the edge middleware returning `204 No Content`.
+- **Allowed Methods:** `GET, POST, PUT, PATCH, DELETE, OPTIONS`
+- **Allowed Headers:** `Content-Type, Authorization, X-Requested-With, Accept`
+
+### 2. Mobile Authentication & JWT
+Mobile apps authenticate via `Authorization: Bearer <token>` headers instead of browser cookies:
+- **`POST /api/auth/mobile/google`**: Send `{ "idToken": "<google_native_id_token>" }`. The backend validates the token, upserts the user, and returns:
+  ```json
+  {
+    "success": true,
+    "token": "<30_day_jwt>",
+    "user": { "id": "...", "email": "...", "name": "...", "role": "customer" }
+  }
+  ```
+- **`GET /api/auth/mobile/token`**: Exchange an active cookie session for a mobile JWT.
+
+### 3. Cross-Device Cart Synchronization
+The cart is backed by the database (`cart_items` table) and synchronizes between web and mobile:
+- **`GET /api/cart`**: Retrieve current cart items with populated watch metadata and real-time inventory.
+- **`POST /api/cart`**: Set single item `{ "productId": "...", "quantity": 1 }` (quantity 0 removes).
+- **`PUT /api/cart`**: Sync / merge multiple items `{ "items": [{ "productId": "...", "quantity": 2 }] }`.
+- **`DELETE /api/cart`**: Empty the active cart.
+
+---
+
 ## Milestone Progress & Reviews
 Detailed milestone progress notes, challenges, improvements, and architectural decisions are tracked in [REVIEW.md](file:///c:/Users/hp/Documents/hng/watch-shop/REVIEW.md).

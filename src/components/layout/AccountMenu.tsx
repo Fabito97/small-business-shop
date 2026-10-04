@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { User as UserIcon, LogOut, Package, Shield, ChevronDown } from 'lucide-react';
+import { useCartSync } from '@/hooks/useCartSync';
 import type { User } from '@/server/db/schema';
 
 interface AccountMenuProps {
@@ -11,6 +12,7 @@ interface AccountMenuProps {
 }
 
 export function AccountMenu({ user }: AccountMenuProps) {
+  useCartSync(Boolean(user));
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 

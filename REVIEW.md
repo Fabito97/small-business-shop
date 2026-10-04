@@ -411,3 +411,39 @@
 
 ### Challenges
 - In Next.js App Router on Vercel serverless functions, returning raw Web API `Response.redirect()` bypasses the internal cookie store buffer, causing the browser to redirect to Google without receiving the `Set-Cookie` headers for `g_state`. Resolved by using `NextResponse.redirect()` and explicitly writing cookies onto the response object.
+
+## Mobile Client Architecture (CORS, Mobile JWT & Cross-Platform Cart Sync)
+
+### What was implemented
+- **Full CORS Middleware & Headers (`src/proxy.ts`, `next.config.ts`)**:
+  - Configured Next.js headers to return `Access-Control-Allow-Origin: *`, allowed HTTP methods (`GET,POST,PUT,PATCH,DELETE,OPTIONS`), and allowed headers (`Content-Type, Authorization, X-Requested-With, Accept`) on all `/api/*` endpoints.
+  - Implemented instant preflight handling in `src/proxy.ts` (Next.js middleware) that intercepts `OPTIONS` requests and returns HTTP 204 No Content with CORS headers, bypassing serverless database overhead.
+- **Mobile JWT Authentication (`src/server/auth/jwt.ts`, `src/server/auth/guards.ts`)**:
+  - Integrated `jose` using universal Web Crypto algorithms (`HS256`).
+  - Implemented `signMobileToken(user: User)` issuing 30-day JWTs with `sub`, `email`, `role`, and `name` claims.
+  - Implemented `verifyMobileToken(token: string)` with full signature verification and expiration checking.
+  - Upgraded server auth guards (`getCurrentUser`, `requireUser`, `requireAdmin`) to dynamically authenticate both Web cookie sessions (`meridian_session`) and Mobile Bearer tokens (`Authorization: Bearer <jwt>`) with zero regression to web browsing.
+- **Mobile Authentication Routes (`src/app/api/auth/mobile/`)**:
+  - `POST /api/auth/mobile/google`: Validates native Google OAuth ID tokens from mobile clients via Google's tokeninfo API, enforces verified emails, upserts user records in Neon, applies admin role matching against `ADMIN_EMAILS`, and issues a 30-day mobile JWT.
+  - `GET /api/auth/mobile/token`: Allows any authenticated web session or existing client to retrieve a mobile JWT token.
+- **Persistent Database Cart (`src/server/db/schema.ts`, `src/server/services/cart.service.ts`)**:
+  - Added `cart_items` table in Neon PostgreSQL with foreign keys cascade to `users` and `products`, integer quantities, and a composite unique index on `(user_id, product_id)`.
+  - Applied schema migration to Neon using `npm run db:push`.
+  - Implemented `CartService`: `getUserCart`, `setItem`, `syncCart` (bulk merge), and `clearCart`.
+- **Cart API Endpoints (`src/app/api/cart/route.ts`)**:
+  - `GET /api/cart`: Returns active user's cart populated with product metadata, live stock, and prices in integer kobo.
+  - `POST /api/cart`: Adds or updates single item quantity with stock clamping.
+  - `PUT /api/cart`: Bulk merges guest items into the user's persistent cart.
+  - `DELETE /api/cart`: Clears the user's cart in Neon.
+  - All endpoints guarded by `requireUser()` and accessible via Bearer tokens or cookies.
+- **Web Store & Mobile Cart Synchronization (`src/store/cart.ts`, `src/hooks/useCartSync.ts`, `src/components/layout/AccountMenu.tsx`)**:
+  - Updated web Zustand store with non-blocking server synchronization on cart mutations (`add`, `setQty`, `remove`, `clear`).
+  - Created `useCartSync(isAuthenticated)` hook mounted at root layout level that hydrates server cart items into web state and flushes pre-login guest items onto the server upon sign in.
+
+### Challenges
+- **Next.js Preflight Handling in Serverless Environments:** In Next.js App Router, route handlers can occasionally reject `OPTIONS` requests before the handler is invoked if not explicitly configured. Handling `OPTIONS` at the middleware proxy level (`src/proxy.ts`) guarantees reliable 204 responses across all cloud hosting providers including Vercel.
+- **React Hydration & Non-blocking Cart Sync:** Local Zustand mutations must remain instantaneous (0ms) so web users do not experience UI lag when clicking "+". Solved by performing local store updates immediately and dispatching background `fetch('/api/cart')` requests asynchronously without blocking UI interactions.
+
+### Decisions and assumptions
+- Token lifespan is set to 30 days for mobile clients, avoiding frequent sign-ins in React Native Expo while maintaining token revocability.
+- Server-side cart operations enforce real-time stock clamping against the products table to prevent users from reserving more units than available in inventory.

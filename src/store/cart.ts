@@ -10,17 +10,33 @@ export interface CartItem {
   priceKobo: number;
   quantity: number;
   stock: number;
+  updatedAt?: string;
 }
 
 export interface CartState {
   items: CartItem[];
   isOpen: boolean;
-  add: (item: Omit<CartItem, 'quantity'>, qty?: number) => void;
+  add: (item: Omit<CartItem, 'quantity' | 'updatedAt'>, qty?: number) => void;
   setQty: (productId: string, qty: number) => void;
   remove: (productId: string) => void;
   clear: () => void;
   open: () => void;
   close: () => void;
+  setServerCart: (items: CartItem[]) => void;
+}
+
+function syncServerItem(productId: string, quantity: number) {
+  if (typeof window === 'undefined') return;
+  fetch('/api/cart', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productId, quantity }),
+  }).catch(() => {});
+}
+
+function syncServerClear() {
+  if (typeof window === 'undefined') return;
+  fetch('/api/cart', { method: 'DELETE' }).catch(() => {});
 }
 
 export const useCartStore = create<CartState>()(
@@ -32,46 +48,66 @@ export const useCartStore = create<CartState>()(
       add: (item, qty = 1) => {
         const { items } = get();
         const existingIndex = items.findIndex((i) => i.productId === item.productId);
+        const nowIso = new Date().toISOString();
 
+        let finalQty = qty;
         if (existingIndex > -1) {
           const existing = items[existingIndex];
           const newQty = Math.min(existing.quantity + qty, item.stock);
+          finalQty = newQty;
           const updatedItems = [...items];
-          updatedItems[existingIndex] = { ...existing, quantity: newQty, stock: item.stock };
+          updatedItems[existingIndex] = {
+            ...existing,
+            quantity: newQty,
+            stock: item.stock,
+            updatedAt: nowIso,
+          };
           set({ items: updatedItems, isOpen: true });
         } else {
           const initialQty = Math.min(Math.max(1, qty), item.stock);
+          finalQty = initialQty;
           set({
-            items: [...items, { ...item, quantity: initialQty }],
+            items: [...items, { ...item, quantity: initialQty, updatedAt: nowIso }],
             isOpen: true,
           });
         }
+        syncServerItem(item.productId, finalQty);
       },
 
       setQty: (productId, qty) => {
         const { items } = get();
         if (qty <= 0) {
           set({ items: items.filter((i) => i.productId !== productId) });
+          syncServerItem(productId, 0);
           return;
         }
 
+        const nowIso = new Date().toISOString();
+        let clamped = qty;
         set({
           items: items.map((i) => {
             if (i.productId === productId) {
-              const clamped = Math.min(qty, i.stock);
-              return { ...i, quantity: clamped };
+              clamped = Math.min(qty, i.stock);
+              return { ...i, quantity: clamped, updatedAt: nowIso };
             }
             return i;
           }),
         });
+        syncServerItem(productId, clamped);
       },
 
       remove: (productId) => {
         set({ items: get().items.filter((i) => i.productId !== productId) });
+        syncServerItem(productId, 0);
       },
 
       clear: () => {
         set({ items: [] });
+        syncServerClear();
+      },
+
+      setServerCart: (items) => {
+        set({ items });
       },
 
       open: () => set({ isOpen: true }),
