@@ -25,13 +25,27 @@ export interface CartState {
   setServerCart: (items: CartItem[]) => void;
 }
 
-function syncServerItem(productId: string, quantity: number) {
+function syncServerItem(productId: string, quantity: number, updatedAt?: string) {
   if (typeof window === 'undefined') return;
   fetch('/api/cart', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ productId, quantity }),
+    body: JSON.stringify({
+      productId,
+      quantity,
+      updatedAt: updatedAt || new Date().toISOString(),
+    }),
   }).catch(() => {});
+}
+
+function notifyLocalTabs() {
+  if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+    try {
+      const channel = new BroadcastChannel('dave_store_cart_channel');
+      channel.postMessage('cart_updated');
+      channel.close();
+    } catch {}
+  }
 }
 
 function syncServerClear() {
@@ -71,7 +85,8 @@ export const useCartStore = create<CartState>()(
             isOpen: true,
           });
         }
-        syncServerItem(item.productId, finalQty);
+        syncServerItem(item.productId, finalQty, nowIso);
+        notifyLocalTabs();
       },
 
       setQty: (productId, qty) => {
@@ -93,17 +108,21 @@ export const useCartStore = create<CartState>()(
             return i;
           }),
         });
-        syncServerItem(productId, clamped);
+        syncServerItem(productId, clamped, nowIso);
+        notifyLocalTabs();
       },
 
       remove: (productId) => {
+        const nowIso = new Date().toISOString();
         set({ items: get().items.filter((i) => i.productId !== productId) });
-        syncServerItem(productId, 0);
+        syncServerItem(productId, 0, nowIso);
+        notifyLocalTabs();
       },
 
       clear: () => {
         set({ items: [] });
         syncServerClear();
+        notifyLocalTabs();
       },
 
       setServerCart: (items) => {

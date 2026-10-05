@@ -20,6 +20,7 @@ import {
   getFreeShippingProgress,
 } from '@/store/cart';
 import { formatNaira } from '@/lib/money';
+import { SHOP } from '@/config/shop';
 
 export function CartDrawer() {
   const isOpen = useCartStore((state) => state.isOpen);
@@ -31,6 +32,8 @@ export function CartDrawer() {
   const itemCount = useCartStore(selectCartCount);
   const subtotalKobo = useCartStore(selectCartSubtotal);
   const freeShipping = getFreeShippingProgress(subtotalKobo);
+  const shippingFeeKobo = freeShipping.isFree ? 0 : SHOP.shippingFeeKobo;
+  const totalKobo = subtotalKobo + shippingFeeKobo;
 
   // Close drawer on escape key
   useEffect(() => {
@@ -217,16 +220,30 @@ export function CartDrawer() {
         {/* Footer Actions */}
         {items.length > 0 && (
           <div className="p-6 border-t border-[var(--sand)]/10 bg-[var(--ink)]/50 space-y-4">
-            <div className="space-y-1.5">
+            <div className="space-y-2 border-b border-[var(--sand)]/10 pb-3">
               <div className="flex items-center justify-between text-xs text-[var(--muted)]">
-                <span>Subtotal</span>
-                <span className="font-serif text-lg text-[var(--gold)] font-medium">
+                <span>Watches Subtotal</span>
+                <span className="font-serif text-sm text-[var(--ivory)] font-medium">
                   {formatNaira(subtotalKobo)}
                 </span>
               </div>
-              <div className="flex items-center justify-between text-[11px] text-[var(--muted)]">
-                <span>Shipping Calculation</span>
-                <span>Calculated at checkout</span>
+              <div className="flex items-center justify-between text-xs text-[var(--muted)]">
+                <span>Nationwide Delivery</span>
+                {shippingFeeKobo === 0 ? (
+                  <span className="text-[var(--gold)] font-medium uppercase tracking-wider text-[11px]">
+                    Free Delivery
+                  </span>
+                ) : (
+                  <span className="font-serif text-xs text-[var(--ivory)]">
+                    {formatNaira(shippingFeeKobo)}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center justify-between pt-1">
+                <span className="text-xs uppercase tracking-wider text-[var(--ivory)] font-medium">Total</span>
+                <span className="font-serif text-lg text-[var(--gold)] font-semibold">
+                  {formatNaira(totalKobo)}
+                </span>
               </div>
             </div>
 
